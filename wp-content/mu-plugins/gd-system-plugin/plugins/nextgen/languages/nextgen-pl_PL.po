@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/project\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-12-09T21:47:24+00:00\n"
+"PO-Revision-Date: 2020-12-09T21:47:27+00:00\n"
+"Language: \n"
+"X-Generator: json2po\n"
+
+#. Plugin Name of the plugin
+msgid "NextGen"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.godaddy.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "Next Generation WordPress Experience"
+msgstr "Funkcje WordPressa nowej generacji"
+
+#. Author of the plugin
+msgid "GoDaddy"
+msgstr ""
+
+#: includes/class-block-editor.php:43
+msgid "Setting to disable or enable NextGen administration dashboard shortcut."
+msgstr "Ustawienie umożliwiające włączenie lub wyłączenie skrótu do kokpitu administracyjnego NextGen."
+
+#: includes/class-block-editor.php:89
+msgid "Headline"
+msgstr "Nagłówek"
+
+#: includes/class-block-editor.php:90
+msgid "Text"
+msgstr "Tekst"
+
+#: includes/class-block-editor.php:91
+msgid "List"
+msgstr "Lista"
+
+#: includes/class-block-editor.php:92
+msgid "Image"
+msgstr "Obrazek"
+
+#: includes/class-block-editor.php:93
+msgid "Gallery"
+msgstr "Galeria"
+
+#: includes/class-block-editor.php:94
+msgid "Contact"
+msgstr "Kontakt"
+
+#: includes/class-block-editor.php:95
+msgid "Call To Action"
+msgstr "Wezwanie do działania"
+
+#: includes/class-image-categories.php:78
+msgid "Image category."
+msgstr "Kategoria obrazka."
+
+#: includes/class-publish-guide.php:135
+msgid "Display Publish Guide."
+msgstr "Wyświetl przewodnik publikowania."

@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/project\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-12-09T21:47:24+00:00\n"
+"PO-Revision-Date: 2020-12-09T21:47:27+00:00\n"
+"Language: \n"
+"X-Generator: json2po\n"
+
+#. Plugin Name of the plugin
+msgid "NextGen"
+msgstr "⌠2107639⌡NéxtGén⌠2107639⌡"
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.godaddy.com"
+msgstr "⌠2107640⌡https://www.godaddy.com⌠2107640⌡"
+
+#. Description of the plugin
+msgid "Next Generation WordPress Experience"
+msgstr "⌠2107641⌡Néxt Généråtîòn WòrdPréss Éxpérîéncé⌠2107641⌡"
+
+#. Author of the plugin
+msgid "GoDaddy"
+msgstr "⌠2107642⌡GòDåddy⌠2107642⌡"
+
+#: includes/class-block-editor.php:43
+msgid "Setting to disable or enable NextGen administration dashboard shortcut."
+msgstr "⌠2120483⌡Séttîng tò dîsåblé òr énåblé NéxtGén ådmînîstråtîòn dåshbòård shòrtcüt.⌠2120483⌡"
+
+#: includes/class-block-editor.php:89
+msgid "Headline"
+msgstr "⌠2178249⌡Héådlîné⌠2178249⌡"
+
+#: includes/class-block-editor.php:90
+msgid "Text"
+msgstr "⌠2178250⌡Téxt⌠2178250⌡"
+
+#: includes/class-block-editor.php:91
+msgid "List"
+msgstr "⌠2178251⌡Lîst⌠2178251⌡"
+
+#: includes/class-block-editor.php:92
+msgid "Image"
+msgstr "⌠2178252⌡Îmågé⌠2178252⌡"
+
+#: includes/class-block-editor.php:93
+msgid "Gallery"
+msgstr "⌠2178253⌡Gålléry⌠2178253⌡"
+
+#: includes/class-block-editor.php:94
+msgid "Contact"
+msgstr "⌠2178254⌡Còntåct⌠2178254⌡"
+
+#: includes/class-block-editor.php:95
+msgid "Call To Action"
+msgstr "⌠2178255⌡Cåll Tò Åctîòn⌠2178255⌡"
+
+#: includes/class-image-categories.php:78
+msgid "Image category."
+msgstr "⌠2227755⌡Îmågé cåtégòry.⌠2227755⌡"
+
+#: includes/class-publish-guide.php:135
+msgid "Display Publish Guide."
+msgstr "⌠2227756⌡Dîsplåy Püblîsh Güîdé.⌠2227756⌡"

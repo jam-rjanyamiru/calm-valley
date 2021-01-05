@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="www.calm-valley.com" id="29304d0c-cb61-4249-b17f-e00e0c92053c" port="22" nameFormat="DESCRIPTIVE" username="w5i643857886439" />
+    </configs>
+  </component>
+</project>

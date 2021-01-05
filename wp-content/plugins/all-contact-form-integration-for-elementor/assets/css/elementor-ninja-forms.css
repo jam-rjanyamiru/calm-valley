@@ -1,0 +1,27 @@
+/* Ninja Form Styles */
+
+.innovs-ninja-container input, .innovs-ninja-container textarea {
+  height: auto;
+  padding: 10px;
+}
+
+.innovs-contact-form-align-center .innovs-ninja-container, .innovs-contact-form-btn-align-center .innovs-ninja-container .nf-field .nf-field-element input[type="button"] {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block;
+  float: none;
+}
+
+.innovs-contact-form-align-left .innovs-ninja-container, .innovs-contact-form-btn-align-left .innovs-ninja-container .nf-field .nf-field-element input[type="button"] {
+  float: left;
+  width: auto;
+}
+
+.innovs-contact-form-align-right .innovs-ninja-container, .innovs-contact-form-btn-align-right .innovs-ninja-container .nf-field .nf-field-element input[type="button"] {
+  float: right;
+  width: auto;
+}
+
+.innovs-ninja-container ul.wpuf-form li .wpuf-fields input[type="text"], .innovs-ninja-container .nf-field .nf-field-element input[type="password"], .innovs-ninja-container ul.wpuf-form li .wpuf-fields input[type="email"], .innovs-ninja-container .nf-field .nf-field-element input[type="url"], .innovs-ninja-container ul.wpuf-form li .wpuf-fields input[type="number"], .innovs-ninja-container .nf-field .nf-field-element textarea {
+  max-width: 100%;
+}

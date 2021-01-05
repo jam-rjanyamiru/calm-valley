@@ -1,0 +1,16 @@
+/**
+ * Gravity Form
+ */
+.innovs-gravity-form-align-default,
+.innovs-gravity-form-align-left,
+.innovs-gravity-form-btn-align-left {
+  text-align: left;
+}
+.innovs-gravity-form-align-right,
+.innovs-gravity-form-btn-align-right {
+  text-align: right;
+}
+.innovs-gravity-form-align-center,
+.innovs-gravity-form-btn-align-center {
+  text-align: center;
+}

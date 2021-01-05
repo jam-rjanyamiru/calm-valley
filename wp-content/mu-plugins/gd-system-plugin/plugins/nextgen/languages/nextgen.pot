@@ -1,0 +1,333 @@
+# Copyright (c) 2020 GoDaddy Operating Company, LLC. All Rights Reserved.
+msgid ""
+msgstr ""
+"Project-Id-Version: NextGen 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/project\n"
+"Last-Translator: plugins@godaddy.com\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-12-09T21:47:24+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: nextgen\n"
+
+#. Plugin Name of the plugin
+msgid "NextGen"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.godaddy.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "Next Generation WordPress Experience"
+msgstr ""
+
+#. Author of the plugin
+msgid "GoDaddy"
+msgstr ""
+
+#: includes/class-block-editor.php:43
+msgid "Setting to disable or enable NextGen administration dashboard shortcut."
+msgstr ""
+
+#: includes/class-block-editor.php:89
+msgid "Headline"
+msgstr ""
+
+#: includes/class-block-editor.php:90
+msgid "Text"
+msgstr ""
+
+#: includes/class-block-editor.php:91
+msgid "List"
+msgstr ""
+
+#: includes/class-block-editor.php:92
+msgid "Image"
+msgstr ""
+
+#: includes/class-block-editor.php:93
+msgid "Gallery"
+msgstr ""
+
+#: includes/class-block-editor.php:94
+msgid "Contact"
+msgstr ""
+
+#: includes/class-block-editor.php:95
+msgid "Call To Action"
+msgstr ""
+
+#: includes/class-image-categories.php:78
+msgid "Image category."
+msgstr ""
+
+#: includes/class-publish-guide.php:135
+msgid "Display Publish Guide."
+msgstr ""
+
+#: assets/js/feedback-modal/feedback-modal-comment.js:25
+msgid "Tell us about your experience… (optional)"
+msgstr ""
+
+#: assets/js/feedback-modal/feedback-modal-comment.js:32
+msgid "Send"
+msgstr ""
+
+#: assets/js/feedback-modal/feedback-modal-success.js:15
+msgid "Thank you for sharing your feedback with us"
+msgstr ""
+
+#: assets/js/feedback-modal/feedback-modal-success.js:21
+msgid "Close"
+msgstr ""
+
+#: assets/js/feedback-modal/index.js:79
+#: assets/js/feedback-modal/index.js:90
+#: assets/js/publish-guide/success-view.js:110
+msgid "Give feedback"
+msgstr ""
+
+#: assets/js/feedback-modal/index.js:91
+msgid "How would you rate your experience?"
+msgstr ""
+
+#: assets/js/image-categories.js:5
+msgid "Fashion"
+msgstr ""
+
+#: assets/js/image-categories.js:10
+msgid "Home Decor"
+msgstr ""
+
+#: assets/js/image-categories.js:15
+msgid "Coffee"
+msgstr ""
+
+#: assets/js/image-categories.js:20
+msgid "Construction"
+msgstr ""
+
+#: assets/js/image-categories.js:25
+msgid "Art"
+msgstr ""
+
+#: assets/js/image-categories.js:30
+msgid "Baking"
+msgstr ""
+
+#: assets/js/image-categories.js:35
+msgid "Fitness"
+msgstr ""
+
+#: assets/js/image-categories.js:40
+msgid "Landscaping"
+msgstr ""
+
+#: assets/js/layout-selector/image-categories.js:37
+msgid "My site is about:"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/add-domain.js:25
+msgid "Add your domain"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/add-domain.js:26
+msgid "Look more professional and make it easier for customers to find your website."
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/add-domain.js:43
+msgid "Add domain"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-content.js:18
+msgid "Review and add pages"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-content.js:19
+msgid "We got you started with a few. Add more pages and content."
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-content.js:27
+msgid "Manage pages"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-design.js:18
+msgid "Make the design your own"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-design.js:19
+msgid "Update the colors, fonts and change the look and feel of your site."
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-design.js:27
+msgid "Customize"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:127
+msgid "website logo"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:132
+msgid "Add your site info & brand"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:133
+msgid "What’s the name of your site and what’s it’s purpose? Add a logo if you have one."
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:142
+msgid "Edit"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:148
+msgid "Site title"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:153
+msgid "Site description"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:162
+#: assets/js/publish-guide/publish-guide-items/site-info.js:176
+#: assets/js/publish-guide/publish-guide-items/site-info.js:180
+#: assets/js/publish-guide/publish-guide-items/site-info.js:192
+msgid "Upload site logo"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:197
+msgid "Replace Image"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:207
+msgid "Remove image"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:220
+msgid "Save"
+msgstr ""
+
+#: assets/js/publish-guide/publish-guide-items/site-info.js:226
+msgid "Do this later"
+msgstr ""
+
+#: assets/js/publish-guide/success-view.js:38
+msgid "Your site is live on"
+msgstr ""
+
+#: assets/js/publish-guide/success-view.js:50
+msgid "Time to celebrate and"
+msgstr ""
+
+#: assets/js/publish-guide/success-view.js:50
+msgid "share the great news."
+msgstr ""
+
+#: assets/js/publish-guide/success-view.js:63
+#: assets/js/publish-guide/success-view.js:76
+#: assets/js/publish-guide/success-view.js:90
+msgid "Check out my new website!"
+msgstr ""
+
+#. translators: %1$s is a placeholder for the site's url.
+#: assets/js/publish-guide/success-view.js:93
+msgid "I just published my website at %1$s, come check it out and let me know what you think!"
+msgstr ""
+
+#: assets/js/publish-guide/success-view.js:119
+msgid "Hide this guide"
+msgstr ""
+
+#: assets/js/site-content/post-menu-actions.js:25
+msgid "Select an action"
+msgstr ""
+
+#: assets/js/site-content/post-menu-actions.js:34
+msgid "Duplicate"
+msgstr ""
+
+#: assets/js/site-content/post-menu-actions.js:46
+msgid "Really delete?"
+msgstr ""
+
+#: assets/js/site-content/post-menu-actions.js:51
+msgid "Delete"
+msgstr ""
+
+#. translators: %s is the post title.
+#: assets/js/site-content/post-type-panel.js:49
+msgid "\"%s\" has been deleted."
+msgstr ""
+
+#: assets/js/site-content/post-type-panel.js:56
+msgid "Undo"
+msgstr ""
+
+#: assets/js/site-content/post-type-panel.js:63
+msgid "Trashing failed"
+msgstr ""
+
+#. translators: %s is the post title.
+#: assets/js/site-content/post-type-panel.js:105
+msgid "\"%s\" has been duplicated."
+msgstr ""
+
+#: assets/js/site-content/post-type-panel.js:111
+msgid "Duplication failed"
+msgstr ""
+
+#: assets/js/site-content/post-type-panel.js:132
+msgid "(no title)"
+msgstr ""
+
+#: assets/js/site-content/post-type-panel.js:136
+msgid "(current)"
+msgstr ""
+
+#: assets/js/site-design/color-palette-preview.js:68
+msgid "Colors"
+msgstr ""
+
+#: assets/js/site-design/font-preview.js:52
+msgid "Fonts"
+msgstr ""
+
+#: assets/js/site-design/font-preview.js:90
+msgid "The quick brown fox jumped over the lazy dog."
+msgstr ""
+
+#: assets/js/site-design/font-size-picker.js:34
+msgid "Small"
+msgstr ""
+
+#: assets/js/site-design/font-size-picker.js:39
+msgid "Normal"
+msgstr ""
+
+#: assets/js/site-design/font-size-picker.js:44
+msgid "Large"
+msgstr ""
+
+#: assets/js/site-design/font-size-picker.js:114
+msgid "Base size"
+msgstr ""
+
+#: assets/js/site-design/font-size-picker.js:119
+msgid "Font size"
+msgstr ""
+
+#: assets/js/site-design/font-size-picker.js:146
+msgid "Heading Scale"
+msgstr ""
+
+#: assets/js/site-design/index.js:134
+msgid "Site design"
+msgstr ""
+
+#: assets/js/site-design/index.js:139
+msgid "Choose a curated design style, then personalize your site's colors."
+msgstr ""

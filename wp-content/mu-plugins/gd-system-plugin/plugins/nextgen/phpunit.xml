@@ -1,0 +1,30 @@
+<phpunit
+	bootstrap="tests/phpunit/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+>
+
+	<testsuites>
+		<testsuite name="general">
+			<directory prefix="test-" suffix=".php">./tests/phpunit</directory>
+		</testsuite>
+	</testsuites>
+
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<file>nextgen.php</file>
+			<directory>./includes</directory>
+			<exclude>
+				<file>./includes/autoload.php</file>
+			</exclude>
+		</whitelist>
+	</filter>
+
+	<php>
+		<const name="PHPUNIT_PLUGIN_TEST" value="true"/>
+	</php>
+
+</phpunit>

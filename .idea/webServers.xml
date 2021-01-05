@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="00df678d-92b1-4395-bb72-64e0bf640374" name="Godaddy_calm_valley">
+        <fileTransfer rootFolder="/var/www" accessType="SFTP" host="www.calm-valley.com" port="22" sshConfigId="29304d0c-cb61-4249-b17f-e00e0c92053c" sshConfig="w5i643857886439@www.calm-valley.com:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,59 @@
+/**
+ * Contact Form 7 Style
+ */
+.clearfix::before,
+.clearfix::after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+.innovs-contact-form-align-right .innovs-contact-form-container,
+.innovs-contact-form-btn-align-right .innovs-contact-form-container input.wpcf7-submit {
+    float: right;
+    width: auto;
+}
+.innovs-contact-form-container textarea,
+.innovs-contact-form-container input[type="text"],
+.innovs-contact-form-container input[type="password"],
+.innovs-contact-form-container input[type="datetime"],
+.innovs-contact-form-container input[type="datetime-local"],
+.innovs-contact-form-container input[type="date"],
+.innovs-contact-form-container input[type="month"],
+.innovs-contact-form-container input[type="time"],
+.innovs-contact-form-container input[type="week"],
+.innovs-contact-form-container input[type="number"],
+.innovs-contact-form-container input[type="email"],
+.innovs-contact-form-container input[type="url"],
+.innovs-contact-form-container input[type="search"],
+.innovs-contact-form-container input[type="tel"],
+.innovs-contact-form-container input[type="color"],
+.innovs-contact-form-container .uneditable-input {
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+.innovs-contact-form-container .wpcf7-form::before,
+.innovs-contact-form-container .wpcf7-form::after {
+    content: " ";
+    clear: both;
+    display: table;
+}
+.innovs-contact-form-container .wpcf7-response-output {
+    clear: both;
+}
+.innovs-contact-form-container input,
+.innovs-contact-form-container textarea {
+    height: auto;
+    padding: 10px;
+}
+.innovs-contact-form-align-center .innovs-contact-form-container,
+.innovs-contact-form-btn-align-center .innovs-contact-form-container input.wpcf7-submit {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block;
+    float: none;
+}
+.innovs-contact-form-align-left .innovs-contact-form-container,
+.innovs-contact-form-btn-align-left .innovs-contact-form-container input.wpcf7-submit {
+    float: left;
+    width: auto;
+}
