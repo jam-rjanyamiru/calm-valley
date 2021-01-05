@@ -22,5 +22,11 @@ node_modules/
 *.sql
 *.sqlite
 
-.idea/
-/wp-content/uploads/
+debug.log
+uploads/
+.vscode
+sftp-config.json
+
+# IntelliJ project files
+.idea
+*.iml
