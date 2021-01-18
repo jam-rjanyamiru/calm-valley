@@ -6,7 +6,7 @@
 defined( 'ABSPATH' ) || exit; 
 ?>
 
-<h2>WooCommerce Multi-Step Checkout by <img src="<?php echo plugins_url('/', WMSC_PLUGIN_FILE); ?>assets/images/silkypress_logo.png" /> <a href="https://www.silkypress.com/" target="_blank">SilkyPress</a></h2>
+<h2>Multi-Step Checkout for WooCommerce by <img src="<?php echo plugins_url('/', WMSC_PLUGIN_FILE); ?>assets/images/silkypress_logo.png" /> <a href="https://www.silkypress.com/" target="_blank">SilkyPress</a></h2>
 
 <div class="wrap">
 

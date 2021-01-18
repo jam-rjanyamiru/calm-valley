@@ -1,0 +1,150 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: WC Order Contact\n"
+"POT-Creation-Date: 2020-12-03 16:01+0800\n"
+"PO-Revision-Date: 2020-12-03 16:01+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.13\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: wc-order-contact.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: includes/order_contact_center.php:7
+msgid "Default Switch Email Activated"
+msgstr ""
+
+#: includes/order_contact_center.php:13 includes/order_contact_edit.php:3
+#: wc-order-contact.php:184
+msgid "Order ID"
+msgstr ""
+
+#: includes/order_contact_center.php:14
+msgid "Order Date"
+msgstr ""
+
+#: includes/order_contact_center.php:15
+msgid "Customer ID"
+msgstr ""
+
+#: includes/order_contact_center.php:16
+msgid "Items"
+msgstr ""
+
+#: includes/order_contact_center.php:17
+msgid "Email Activate"
+msgstr ""
+
+#: includes/order_contact_center.php:18
+msgid "Actions"
+msgstr ""
+
+#: includes/order_contact_center.php:32
+msgid "Product ID"
+msgstr ""
+
+#: includes/order_contact_center.php:33 wc-order-contact.php:177
+msgid "Product Name"
+msgstr ""
+
+#: includes/order_contact_center.php:34
+msgid "Product Quantity"
+msgstr ""
+
+#: includes/order_contact_center.php:35
+msgid "Product Subtotal"
+msgstr ""
+
+#: includes/order_contact_center.php:46
+msgid "Edit"
+msgstr ""
+
+#: includes/order_contact_center.php:48
+msgid "Delete"
+msgstr ""
+
+#: includes/order_contact_edit.php:5
+msgid "Not Selected"
+msgstr ""
+
+#: includes/order_contact_edit.php:22 wc-order-contact.php:189
+msgid "Order Comment"
+msgstr ""
+
+#: includes/order_contact_edit.php:39
+msgid "Switch Email Activated"
+msgstr ""
+
+#: includes/order_contact_edit.php:87
+msgid "Please type your words..."
+msgstr ""
+
+#: includes/order_contact_edit.php:91 wc-order-contact.php:157
+msgid "Update Comment"
+msgstr ""
+
+#: wc-order-contact.php:112
+msgid "Comment"
+msgstr ""
+
+#: wc-order-contact.php:168
+msgid "Notice"
+msgstr ""
+
+#: wc-order-contact.php:168
+msgid "You have a comment at this order."
+msgstr ""
+
+#: wc-order-contact.php:178
+msgid "Product Amount"
+msgstr ""
+
+#: wc-order-contact.php:179
+msgid "Product Unit Price"
+msgstr ""
+
+#: wc-order-contact.php:185
+msgid "Total Price"
+msgstr ""
+
+#: wc-order-contact.php:186
+msgid "Order Status"
+msgstr ""
+
+#: wc-order-contact.php:187
+msgid "Customer Name"
+msgstr ""
+
+#: wc-order-contact.php:188
+msgid "Comment Time"
+msgstr ""
+
+#: wc-order-contact.php:222 wc-order-contact.php:223
+msgid "Order Contact"
+msgstr ""
+
+#: wc-order-contact.php:233 wc-order-contact.php:234
+msgid "Order Contact Edit"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "WC Order Contact"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Add Contact field in my-account page that shows order details."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "RJ"
+msgstr ""

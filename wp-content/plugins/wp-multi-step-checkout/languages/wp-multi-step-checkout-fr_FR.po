@@ -1,5 +1,5 @@
-# Translation of Plugins - WooCommerce Multi-Step Checkout - Development (trunk) in French (France)
-# This file is distributed under the same license as the Plugins - WooCommerce Multi-Step Checkout - Development (trunk) package.
+# Translation of Plugins - Multi-Step Checkout for WooCommerce - Development (trunk) in French (France)
+# This file is distributed under the same license as the Plugins - Multi-Step Checkout for WooCommerce - Development (trunk) package.
 msgid ""
 msgstr ""
 "PO-Revision-Date: +0000\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: GlotPress/2.4.0-alpha\n"
 "Language: fr\n"
-"Project-Id-Version: Plugins - WooCommerce Multi-Step Checkout - Development (trunk)\n"
+"Project-Id-Version: Plugins - Multi-Step Checkout for WooCommerce - Development (trunk)\n"
 
 #. Author URI of the plugin/theme
 msgid "https://www.silkypress.com"
@@ -99,12 +99,12 @@ msgctxt "Frontend: button label"
 msgid "Back to cart"
 msgstr "Retour au panier"
 
-#. #-#-#-#-#  wp-multi-step-checkout-code.pot (WooCommerce Multi-Step Checkout
+#. #-#-#-#-#  wp-multi-step-checkout-code.pot (Multi-Step Checkout for WooCommerce
 #. 1.3)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/admin-side.php:94
-msgid "WooCommerce Multi-Step Checkout"
-msgstr "WooCommerce Multi-Step Checkout"
+msgid "Multi-Step Checkout for WooCommerce"
+msgstr "Multi-Step Checkout for WooCommerce"
 
 #: includes/admin-side.php:22
 msgid "Show the Order and the Payment steps together"

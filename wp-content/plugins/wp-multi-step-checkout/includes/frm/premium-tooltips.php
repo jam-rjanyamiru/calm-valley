@@ -81,7 +81,7 @@ class SilkyPress_PremiumTooltips {
     ?>
     <script type="text/javascript">
         jQuery(document).ready(function($){
-            $(".form-group.disabled-short, .form-group.disabled").click(function(e){
+            $(".form-group.disabled-short, .form-group.disabled").on('click',function(e){
                 if(typeof window.tooltip != "undefined"){
                     clearTimeout(window.tooltip);
                 }

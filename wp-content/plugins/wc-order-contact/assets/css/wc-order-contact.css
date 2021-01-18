@@ -1,0 +1,96 @@
+.order-qa.woocommerce { background-color: white; margin-top: 24px; }
+
+.order-qa h4, .message-qa h4 { border-bottom: 1px solid #E7EAEC; padding-bottom: 15px; margin-bottom: 30px; }
+
+.order-qa .qa-q, .message-qa .qa-q { font-size: 12px; border-width: 0; background-color: #F2F2F2; border-radius: 5px; margin-right: 10px; position: relative; padding: 10px 15px; }
+
+.order-qa .qa-q::before, .message-qa .qa-q::before { content: ""; display: block; width: 8px; height: 8px; -webkit-transform: translateY(-50%) rotate(45deg); -ms-transform: translateY(-50%) rotate(45deg); transform: translateY(-50%) rotate(45deg); background-color: #F2F2F2; position: absolute; top: 50%; right: -4px; }
+
+.order-qa .qa-a, .message-qa .qa-a { font-size: 12px; border-width: 0; background-color: #C2E4A4; border-radius: 5px; margin-left: 10px; position: relative; padding: 10px 15px; }
+
+.order-qa .qa-a::before, .message-qa .qa-a::before { content: ""; display: block; width: 8px; height: 8px; -webkit-transform: translateY(-50%) rotate(45deg); -ms-transform: translateY(-50%) rotate(45deg); transform: translateY(-50%) rotate(45deg); background-color: #C2E4A4; position: absolute; top: 50%; left: -4px; }
+
+.order-qa .name, .message-qa .name { margin-bottom: 4px; }
+
+.order-qa .time, .message-qa .time { margin-bottom: 10px; }
+
+.order-qa .message, .message-qa .message { margin-bottom: 0; }
+
+.order-qa form p.clearfix, .message-qa form p.clearfix { text-align: right; }
+
+.order-qa form p.clearfix .woocommerce-Button, .message-qa form p.clearfix .woocommerce-Button { margin: 0; }
+
+
+/*message page*/
+.qa-q p, .qa-p p {
+    word-break: break-word; }
+
+.qa-q {
+    background: rgba(0, 0, 0, 0.02);
+    border-right: 2px solid #002350;
+    padding: 20px;
+    max-width: 300px;
+    float: right;
+    margin-bottom: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box; }
+@media only screen and (min-width: 768px) {
+    .qa-q {
+        max-width: 480px; } }
+
+.qa-a {
+    background: rgba(0, 0, 0, 0.02);
+    border-left: 2px solid #002350;
+    padding: 20px;
+    max-width: 300px;
+    float: left;
+    margin-bottom: 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box; }
+@media only screen and (min-width: 768px) {
+    .qa-a {
+        max-width: 480px; }
+}
+
+.message-qa-area {
+    clear: both;
+    margin-bottom: 10px; }
+
+.message-qa-area .name {
+    font-size: 12px;
+    line-height: 15px;
+    margin-bottom: 0; }
+
+.message-qa-area .time {
+    font-size: 11px;
+    line-height: 20px;
+    color: #002350;
+    margin-bottom: 5px; }
+
+.message-qa-area .message {
+    margin-bottom: 0; }
+
+.message-qa.woocommerce form .form-row textarea {
+    height: 12em; }
+
+.message-qa input[type="submit"] {
+    float: right;
+    margin-right: 0; }
+
+textarea#order_qa_comments{
+    width: 99%!important;
+    background: black!important;
+    color: white!important;
+}
+
+.form_modify_email_activated{
+    line-height: 12vh;
+}
+
+.toplevel_page_order_contact_center form, form.order_contact_edit{
+    margin-bottom: 1vh;
+}
+
+label[for="order_id"], label#email_activated_switch_label{
+    margin-bottom: 0rem;
+}

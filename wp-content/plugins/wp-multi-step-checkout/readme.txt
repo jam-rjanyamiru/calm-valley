@@ -1,11 +1,11 @@
-=== WooCommerce Multi-Step Checkout ===
+=== Multi-Step Checkout for WooCommerce ===
 Created: 30/10/2017
 Contributors: diana_burduja
 Email: diana@burduja.eu
 Tags: multistep checkout, multi-step-checkout, woocommerce, checkout, shop checkout, checkout steps, checkout wizard, checkout style, checkout page
 Requires at least: 3.0.1
 Tested up to: 5.6 
-Stable tag: 2.13
+Stable tag: 2.14
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Requires PHP: 5.2.4
@@ -38,8 +38,8 @@ Tags: multistep checkout, multi-step-checkout, woocommerce, checkout, shop check
 == Installation ==
 
 * From the WP admin panel, click "Plugins" -> "Add new".
-* In the browser input box, type "WooCommerce Multi-Step Checkout".
-* Select the "WooCommerce Multi-Step Checkout" plugin and click "Install".
+* In the browser input box, type "Multi-Step Checkout for WooCommerce".
+* Select the "Multi-Step Checkout for WooCommerce" plugin and click "Install".
 * Activate the plugin.
 
 OR...
@@ -57,7 +57,7 @@ OR...
 * Use either FTP or your hosts cPanel to gain access to your website file directories.
 * Browse to the `wp-content/plugins` directory.
 * Upload the extracted `wp-image-zoooom` folder to this directory location.
-* Open the WP admin panel.. click the "Plugins" page.. and click "Activate" under the newly added "WooCommerce Multi-Step Checkout" plugin.
+* Open the WP admin panel.. click the "Plugins" page.. and click "Activate" under the newly added "Multi-Step Checkout for WooCommerce" plugin.
 
 == Frequently Asked Questions ==
 
@@ -77,6 +77,10 @@ The plugin doesn't add any cookies and it doesn't modify/add/delete any of the f
 6. On mobile devices
 
 == Changelog ==
+
+= 2.14 =
+* 01/14/2021
+* Modify the plugin's name from WooCommerce Multi-Step Checkout to Multi-Step Checkout for WooCommerce
 
 = 2.13 =
 * 12/07/2020

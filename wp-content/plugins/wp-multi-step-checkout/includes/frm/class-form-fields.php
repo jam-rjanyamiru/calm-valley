@@ -332,7 +332,7 @@ if ( ! class_exists( '\SilkyPressFrm\Form_Fields' ) ) {
 		 * @param string $type    The message type.
 		 * @param string $message The message.
 		 */
-		public function add_message( $type = '', $message ) {
+		public function add_message( $type = '', $message = '' ) {
 			$this->messages[] = array( $type, $message );
 		}
 

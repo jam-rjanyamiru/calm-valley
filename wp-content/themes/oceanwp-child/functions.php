@@ -57,10 +57,16 @@ Class CalmValley
 
     public function load_frontend_files()
     {
+
+//        wp_register_script('frontend-jquery', 'https://code.jquery.com/jquery-3.5.1.min.js');
+//        wp_enqueue_script('frontend-jquery');
+
         wp_register_style('frontend-from-ocean-child', get_stylesheet_directory_uri() . '/assets/css/frontend.css');
         wp_enqueue_style('frontend-from-ocean-child');
+
         wp_register_script('frontend-from-ocean-child', get_stylesheet_directory_uri() . '/assets/js/frontend.js');
         wp_enqueue_script('frontend-from-ocean-child');
+
     }
 
 }

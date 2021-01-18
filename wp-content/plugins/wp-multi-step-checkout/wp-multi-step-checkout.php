@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: WooCommerce Multi-Step Checkout
+ * Plugin Name: Multi-Step Checkout for WooCommerce
  * Plugin URI: https://wordpress.org/plugins/wp-multi-step-checkout/
  * Description: Nice multi-step checkout for your WooCommerce store
- * Version: 2.13
+ * Version: 2.14
  * Author: SilkyPress
  * Author URI: https://www.silkypress.com
  * License: GPL2
@@ -12,7 +12,7 @@
  * Domain Path: /languages/
  *
  * WC requires at least: 3.0.0
- * WC tested up to: 4.8
+ * WC tested up to: 4.9
  * Requires PHP: 5.2.4
  *
  * @package WPMultiStepCheckout
@@ -35,7 +35,7 @@ if ( ! class_exists( 'WPMultiStepCheckout' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '2.13';
+		public $version = '2.14';
 
 		/**
 		 * Plugin's options.
@@ -194,7 +194,7 @@ if ( ! class_exists( 'WPMultiStepCheckout' ) ) :
 		public function install_woocommerce_admin_notice() {
 			?>
 			<div class="error">
-			<p><?php _x( 'The WP Multi-Step Checkout plugin is enabled, but it requires WooCommerce in order to work.', 'Alert Message: WooCommerce require', 'wp-multi-step-checkout' ); ?></p>
+			<p><?php _x( 'The <b>Multi-Step Checkout for WooCommerce</b> plugin is enabled, but it requires WooCommerce in order to work.', 'Alert Message: WooCommerce require', 'wp-multi-step-checkout' ); ?></p>
 			</div>
 			<?php
 		}

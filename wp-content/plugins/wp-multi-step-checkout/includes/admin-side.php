@@ -140,7 +140,7 @@ class WPMultiStepCheckout_Settings {
 
         // Warning about the OceanWP theme
         if ( strpos( strtolower(get_template()), 'oceanwp') !== false && $w->is_url('wmsc-settings') && true == get_theme_mod( 'ocean_woo_multi_step_checkout', false )) { 
-            $message = __('Currently the <b>OceanWP theme</b> is overriding the steps on the checkout page. If you want to use the steps from the <b>WooCommerce Multi-Step Checkout Pro</b> plugin, then you need to disable the "Multi-Step Checkout" option on the <b>WP Admin -> Customize -> WooCommerce Checkout</b> page.', 'wp-multi-step-checkout');
+            $message = __('Currently the <b>OceanWP theme</b> is overriding the steps on the checkout page. If you want to use the steps from the <b>Multi-Step Checkout Pro for WooCommerce</b> plugin, then you need to disable the "Multi-Step Checkout" option on the <b>WP Admin -> Customize -> WooCommerce Checkout</b> page.', 'wp-multi-step-checkout');
             $w->add_notice( 'wmsc_dismiss_oceanwp', $message);
         }
 
@@ -148,7 +148,7 @@ class WPMultiStepCheckout_Settings {
         if ( strpos( strtolower(get_template()), 'avada') !== false && $w->is_url('wmsc-settings') ) {
             $avada_options = get_option('fusion_options');
             if ( isset($avada_options['woocommerce_one_page_checkout'] ) && $avada_options['woocommerce_one_page_checkout'] != '1' ) {
-                $message = __('When using the <b>WooCommerce Multi-Step Checkout</b> plugin with the <b>Avada</b> theme, if you notice some design issues, try changing the <b>WooCommerce One Page Checkout</b> option to <b>OFF</b> on the <a href="themes.php?page=avada_options">WP Admin -> Avada -> Theme Options -> WooCommerce</a>, as shown in <a href="https://www.silkypress.com/wp-content/uploads/2019/02/avada-one-page-checkout.png" target="_blank">this screenshot</a>.', 'wp-multi-step-checkout');
+                $message = __('When using the <b>Multi-Step Checkout for WooCommerce</b> plugin with the <b>Avada</b> theme, if you notice some design issues, try changing the <b>WooCommerce One Page Checkout</b> option to <b>OFF</b> on the <a href="themes.php?page=avada_options">WP Admin -> Avada -> Theme Options -> WooCommerce</a>, as shown in <a href="https://www.silkypress.com/wp-content/uploads/2019/02/avada-one-page-checkout.png" target="_blank">this screenshot</a>.', 'wp-multi-step-checkout');
                 $w->add_notice( 'wmsc_dismiss_avada_one_page_checkout', $message);
                 
             }
@@ -163,7 +163,7 @@ class WPMultiStepCheckout_Settings {
 
         // Warning if the hooks from the German Market plugin are turned on
         if ( class_exists('Woocommerce_German_Market') && get_option( 'gm_deactivate_checkout_hooks', 'off' ) != 'off' && $w->is_url('wmsc-settings') ) {
-            $message = __('The "Deactivate German Market Hooks" option on the <b>WP Admin -> WooCommerce -> German Market -> Ordering</b> page will interfere with the proper working of the <b>WooCommerce Multi-Step Checkout</b> plugin. Please consider turning the option off.', 'wp-multi-step-checkout');
+            $message = __('The "Deactivate German Market Hooks" option on the <b>WP Admin -> WooCommerce -> German Market -> Ordering</b> page will interfere with the proper working of the <b>Multi-Step Checkout for WooCommerce</b> plugin. Please consider turning the option off.', 'wp-multi-step-checkout');
             $w->add_notice( 'wmsc_dismiss_german_market_hooks', $message);
         }
 

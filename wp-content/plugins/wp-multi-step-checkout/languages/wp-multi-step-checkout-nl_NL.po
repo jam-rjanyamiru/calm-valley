@@ -1,8 +1,8 @@
-# Copyright (C) 2017 WooCommerce Multi-Step Checkout
-# This file is distributed under the same license as the WooCommerce Multi-Step Checkout package.
+# Copyright (C) 2017 Multi-Step Checkout for WooCommerce
+# This file is distributed under the same license as the Multi-Step Checkout for WooCommerce package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Multi-Step Checkout 1.2\n"
+"Project-Id-Version: Multi-Step Checkout for WooCommerce 1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-multi-step-"
 "checkout\n"
 "POT-Creation-Date: 2017-12-05 16:29:28+00:00\n"
@@ -40,8 +40,8 @@ msgstr "Toon de Bestelling en Betaling stappen tegelijk"
 
 #. Plugin Name of the plugin/theme
 #: includes/admin-side.php:94
-msgid "WooCommerce Multi-Step Checkout"
-msgstr "WooCommerce Multi-Step Checkout"
+msgid "Multi-Step Checkout for WooCommerce"
+msgstr "Multi-Step Checkout for WooCommerce"
 
 #: includes/form-buttons.php:10
 msgctxt "Frontend: button label"

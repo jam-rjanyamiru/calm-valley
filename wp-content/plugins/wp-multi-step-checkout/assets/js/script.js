@@ -56,7 +56,7 @@ jQuery(window).ready(function($){
 			}
 
 			// Prevent form submission on Enter
-			$( '.woocommerce-checkout' ).keydown( function( e ) {
+			$( '.woocommerce-checkout' ).on( 'keydown', function( e ) {
 				if ( e.which === 13 ) {
 					e.preventDefault();
 					return false;
@@ -64,13 +64,13 @@ jQuery(window).ready(function($){
 			});
 
 			// "Back to Cart" button
-			$( '#wpmc-back-to-cart' ).click( function() {
+			$( '#wpmc-back-to-cart' ).on( 'click', function() {
 				window.location.href = $( this ).data( 'href' ); 
 			});
 
 			// Switch tabs with <- and -> keyboard arrows
 			if ( WPMC.keyboard_nav === '1' ) {
-				$( document ).keydown( function ( e ) {
+				$( document ).on( 'keydown', function ( e ) {
 				  var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
 				  if ( key === 39 ) {
 					  self.switch_tab( self.current_index() + 1 );
