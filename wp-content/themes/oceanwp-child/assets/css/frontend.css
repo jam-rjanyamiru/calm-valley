@@ -1,5 +1,5 @@
 .mapTable{
-    position:absolute;
+    /*position:absolute;*/
     background: none;
     height: 100%;
     width: 100%;
@@ -24,4 +24,13 @@
 
 .mapDiv02{
     float: right;
+}
+
+.progress{
+    height:6rem!important;
+}
+
+.page-id-31 #main a{
+    color: #333!important;
+    text-decoration: none!important;
 }
