@@ -22,97 +22,101 @@ Class CalmValley
     public function __construct()
     {
         $this->register_hooks();
-//        $this->include_files();
     }
 
     private function register_hooks()
     {
         add_action('wp_enqueue_scripts', [$this, 'load_frontend_files'], 101);
         add_action('woocommerce_api_available_camper', [$this, 'available_camper'], 10);
+        add_action('woocommerce_api_add_custom_data_to_cart_step_one', [$this, 'add_custom_data_to_cart_step_one'], 10);
+        add_action('woocommerce_api_add_custom_data_to_cart_step_two', [$this, 'add_custom_data_to_cart_step_two'], 10);
         add_action('woocommerce_api_change_camping_content', [$this, 'change_camping_content'], 10);
-        add_filter( 'woocommerce_add_to_cart_validation', [$this, 'woocommerce_custom_before_add_to_cart'] );
-        add_action( 'wp_ajax_nopriv_woocommerce_add_variation_to_cart', [$this, 'woocommerce_custom_add_variation_to_cart'] );
+        add_action('wp_head', [$this, 'show_something'], 10);
     }
-
-//    private function include_files()
-//    {
-//    }
-
-//    public function header_script_for_country_input()
-//    {
-//        if (is_page('cart')) {
-//            wp_register_style('chosen', 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css');
-//            wp_enqueue_style('chosen');
-//
-//            wp_register_script('chosen', 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js', null, null, true);
-//            wp_enqueue_script('chosen');
-//
-//<!--            <script type='text/javascript'>-->
-//<!--                jQuery(function ($) {-->
-//<!--                    $('#cart_country_select').chosen();-->
-//<!--                });-->
-//<!--            </script>-->
-//<!--            -->
-//        }
-//    }
 
     public function load_frontend_files()
     {
-
         wp_register_style('frontend-from-ocean-child', get_stylesheet_directory_uri() . '/assets/css/frontend.css');
         wp_enqueue_style('frontend-from-ocean-child');
 
         wp_register_script('frontend-from-ocean-child', get_stylesheet_directory_uri() . '/assets/js/frontend.js');
         wp_enqueue_script('frontend-from-ocean-child');
-
-        wp_register_script('wc-variation-add-to-cart', get_stylesheet_directory_uri() . '/assets/js/booking.js');
-        wp_enqueue_script('wc-variation-add-to-cart');
-        $vars = array( 'ajax_url' => admin_url( 'admin-ajax.php' ) );
-        wp_localize_script( 'wc-variation-add-to-cart', 'WC_VARIATION_ADD_TO_CART', $vars );
     }
 
-    public function woocommerce_custom_add_variation_to_cart() {
+    public function show_something(){
+        if(!session_id()) {
+            session_start();
+        }
+//
+//        error_log(print_r('show_something__start', 1));
+//        error_log(print_r($_SESSION, 1));
+//        error_log(print_r('show_something__ending', 1));
+    }
 
-        ob_start();
-
-        $product_id        = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['product_id'] ) );
-        $quantity          = empty( $_POST['quantity'] ) ? 1 : wc_stock_amount( $_POST['quantity'] );
-
-        $variation_id      = isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : '';
-        $variations         = ! empty( $_POST['variation'] ) ? (array) $_POST['variation'] : '';
-
-        $passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations, $cart_item_data );
-
-        if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, $variation_id, $variations ) ) {
-
-            do_action( 'woocommerce_ajax_added_to_cart', $product_id );
-
-            if ( get_option( 'woocommerce_cart_redirect_after_add' ) == 'yes' ) {
-                wc_add_to_cart_message( $product_id );
-            }
-
-            // Return fragments
-            WC_AJAX::get_refreshed_fragments();
-
-        } else {
-
-            // If there was an error adding to the cart, redirect to the product page to show any errors
-            $data = array(
-                'error' => true,
-                'product_url' => apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $product_id ), $product_id )
-            );
-
-            wp_send_json( $data );
-
+    public function add_custom_data_to_cart_step_two(){
+        if(!isset($_POST['result_arr_data'])){
+            return false;
         }
 
-        die();
-    }
+        if(!session_id()) {
+            session_start();
+        }
 
-    public function woocommerce_custom_before_add_to_cart( $cart_item_data ) {
         global $woocommerce;
         $woocommerce->cart->empty_cart();
-        return true;
+        $cart_data = str_replace("\\", "" ,$_POST['result_arr_data']);
+        foreach(json_decode($cart_data) as $key => $single_data){
+            error_log(print_r('single_data', 1));
+            error_log(print_r($single_data->choose_meal, 1));
+            $product_id = $single_data->pd_id;
+            $quantity = 1;
+            $choose_meal = $single_data->choose_meal;
+            $is_driving = $single_data->is_driving;
+            $max_people = $single_data->max_people;
+            $product_cart_id = WC()->cart->generate_cart_id( $product_id );
+
+            $product = wc_get_product($product_id);
+            $variation_id = 0;
+            $price = 0;
+            foreach ($product->get_available_variations() as $variation) {
+                $variation_id = $variation['variation_id'];
+                $price = $variation['display_price'];
+                break;
+            }
+
+            if( ! WC()->cart->find_product_in_cart( $product_cart_id ) ){
+                $booking_pd_meta_data = array(
+                    '_booking_price' => $price,
+                    '_booking_start_date' => $_SESSION['booking_start_date'],
+                    '_booking_end_date' => $_SESSION['booking_end_date'],
+                    '_booking_duration' => $_SESSION['booking_days'],
+                    '_ebs_start' => $_SESSION['booking_start_date'],
+                    '_ebs_end' => $_SESSION['booking_end_date'],
+                );
+                $variation = array('attribute_pa_choose_meal' => $choose_meal, 'attribute_pa_is_driving' => $is_driving, 'attribute_pa_max_people' => $max_people);
+                WC()->cart->add_to_cart( $product_id, $quantity, $variation_id ,$variation, $booking_pd_meta_data);
+                
+                error_log(print_r('ADDTOCARTVALUE', 1));
+                error_log(print_r($variation, 1));
+            }
+        }
+
+        exit;
+    }
+
+    public function add_custom_data_to_cart_step_one(){
+        if(!isset($_POST['product_id'])){
+            return false;
+        }
+        if(!session_id()) {
+            session_start();
+        }
+
+        $product_ids = $_POST['product_id'];
+        $pd_arr = array_unique(explode(',', $product_ids));
+        $_SESSION['booking_step'] = '1';
+        $_SESSION['booking_pds'] = $pd_arr;
+        exit;
     }
 
     public function change_camping_content()
@@ -122,13 +126,33 @@ Class CalmValley
             return false;
         }
 
+        if(!session_id()) {
+            session_start();
+        }
+
         switch($_POST['to'])
         {
-            case 'step':
+            case 'two':
+                include_once (get_stylesheet_directory().'/includes/booking_camping_step_two.php');
+                $_SESSION['booking_start_date'] = $_POST['start_date'];
+                $_SESSION['booking_end_date'] = $_POST['end_date'];
+                $_SESSION['booking_days'] = $_POST['days'];
+                $_SESSION['booking_step'] = '2';
+                break;
+            case 'three':
+                $_SESSION['booking_step'] = '3';
+                include_once (get_stylesheet_directory().'/includes/booking_camping_step_three.php');
+                break;
+            case 'four':
+                $_SESSION['booking_step'] = '4';
+                $_SESSION['accept_contract'] = $_POST['accept_contract'];
+                echo wc_get_checkout_url();
                 break;
             default:
                 break;
         }
+
+        exit;
     }
 
     public function available_camper()
@@ -137,7 +161,6 @@ Class CalmValley
         {
             return false;
         }
-
 
         $start_date = $_POST['start_date'];
         $days = $_POST['days'];
