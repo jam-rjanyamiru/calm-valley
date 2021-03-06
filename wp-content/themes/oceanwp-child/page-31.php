@@ -8,9 +8,9 @@ get_header();
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.zh.min.js"></script>
-<script src="/wp-content/themes/oceanwp-child/assets/js/booking.js"></script>
+<script src="/wp-content/themes/oceanwp-child/assets/js/booking_step_one.js"></script>
 
-<!-- Modal -->
+<!-- Bootstrap Modal -->
 <div class="modal fade" id="simpleTipModal" tabindex="-1" role="dialog" aria-labelledby="simpleTipModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -24,7 +24,7 @@ get_header();
                 簡易小提示-內容
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">請點我關閉</button>
+                <button type="button" class="btn btn-secondary close-modal-btn" data-dismiss="modal">請點我關閉</button>
             </div>
         </div>
     </div>
@@ -32,18 +32,17 @@ get_header();
 
 <div class="mainDiv">
     <div class="progress">
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="16.6" aria-valuemin="0" aria-valuemax="100" style="width: 16.6%">PART1 簡易注意事項</div>
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="16.6" aria-valuemin="0" aria-valuemax="100" style="width: 16.6%">PART2 訂單檢視 <i class="far fa-hand-point-down"></i></div>
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART3 所有注意事項</div>
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART4 填訂購人資訊</div>
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART5 填使用者資訊</div>
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART6 最後訂單資訊</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART1 簡易注意事項</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART2 選擇露營車位置</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART3 選擇露營車內容</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART4 查看注意事項</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART5 填訂購人資訊</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART6 填使用者資訊</div>
+        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0">PART7 訂單資訊</div>
     </div>
 
     <div class="mapDiv01 col-12 col-xl-8 order-1 order-xl-0">
-        這是客製模板的DIV 01
         <table>
-<!--            Like Google Sheet Format-->
             <tbody class="mapTable">
                <?php
                for($i=0;$i<26;$i++){
@@ -60,15 +59,13 @@ get_header();
     </div>
 
     <div class="mapDiv02 col-12 col-xl-4">
-        這是客製模板 DIV 02<br>
-        結果[[x, y, 商品01 ID], [x, y, 商品02 ID]]<div class="result"></div><br>
-        <div class="">
-            <div class="">
-                <div class="">
-                    <div class=""><div class=""></div>
+        現在可選擇的露營車位址[[x, y, 商品01 ID], [x, y, 商品02 ID]]<div class="result"></div><br>
+        <div>
+            <div>
+                <div>
+                    <div><div></div>
                         <h5 class="mb-0">請先選擇起始日期及天數，再於地圖點選帳篷。<br></h5>
                         <h6 class="mb-0" style="color:red">若帳篷不可選擇代表已被預訂。</h6>
-                        <!--										<small class="form-caption">Required fields are followed by *</small>-->
                         <form name="p1_form" id="p1_form" action="https://hayaku.com.tw/index.php/Orders/booking_p1_process" method="post">
                             <div class="form-group">
                                 <div class="form-col">
@@ -77,14 +74,12 @@ get_header();
                             <div class="form-group">
                                 <div class="form-col form-col--arrival-date form-col--over">
                                     <div class="form-control">
-<!--                                        <label>入住日期</label><span class=" "></span>-->
-                                        <input type="text" id="start_date" name="start_date" autocomplete="off" class="" data-language='zh'>
+                                        <input type="text" id="start_date" name="start_date" autocomplete="off" data-language='zh'>
                                     </div>
                                 </div>
                                 <div class="form-col">
                                     <div class="form-control">
-<!--                                        <label>入住天數</label>-->
-                                        <div class="">
+                                        <div>
                                             <select name="days" id="days">
                                                 <option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
                                             </select>
@@ -92,23 +87,16 @@ get_header();
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" name="select_tent" id="select_tent" value="">
+                            <input type="hidden" name="select_cart">
+                            現在選擇的露營車<div class="show_select_cart"></div>
                         </form>
+                        <div>
+                            <button class="to-step-two-btn">下一步選擇露營車資訊</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="">
-            <div class="">
-                <div class="">
-                    <!--顯示使用者選擇的帳篷名稱-->
-                    <div id="show_select_tent">
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 
