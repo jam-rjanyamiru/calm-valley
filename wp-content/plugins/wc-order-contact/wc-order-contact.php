@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WC Order Contact
-Description: Add Contact field in my-account page that shows order details.
+Description: Add Contact field in member-center page that shows order details.
 Version: 1.0.0
 Author: RJ
 Author URI:
@@ -43,11 +43,15 @@ if( ! class_exists('WC_Order_Contact') ) :
 
         private function include_files()
         {
-            wp_register_style($this->setting_parameters['plugin_name'].'-css', plugin_dir_url(__FILE__) .'/assets/css/'.$this->setting_parameters['plugin_name'].'.css');
-            wp_enqueue_style($this->setting_parameters['plugin_name'].'-css');
+            if ( is_admin() || is_page('18') ):
 
-            wp_register_script($this->setting_parameters['plugin_name'].'-js', plugin_dir_url(__FILE__) . '/assets/js/'.$this->setting_parameters['plugin_name'].'.js');
-            wp_enqueue_script($this->setting_parameters['plugin_name'].'-js');
+                wp_register_style($this->setting_parameters['plugin_name'].'-css', plugin_dir_url(__FILE__) .'/assets/css/'.$this->setting_parameters['plugin_name'].'.css');
+                wp_enqueue_style($this->setting_parameters['plugin_name'].'-css');
+
+                wp_register_script($this->setting_parameters['plugin_name'].'-js', plugin_dir_url(__FILE__) . '/assets/js/'.$this->setting_parameters['plugin_name'].'.js');
+                wp_enqueue_script($this->setting_parameters['plugin_name'].'-js');
+
+            endif;
         }
 
         private function register_hooks()
@@ -207,7 +211,7 @@ if( ! class_exists('WC_Order_Contact') ) :
             if($_REQUEST['from'] == 'frontend')
             {
                 $to = get_option('admin_email'); //需要設定管理員的信箱
-                $redirect_url = home_url().'/my-account/view-order/'.$order_id;
+                $redirect_url = home_url().'/member-center/view-order/'.$order_id;
             }elseif($_REQUEST['from'] == 'backend')
             {
                 $to_id = $order->get_customer_id();

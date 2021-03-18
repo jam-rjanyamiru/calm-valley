@@ -28,6 +28,13 @@ jQuery(function ($){
             result_string = $(this).attr('data-pd-id');
             this_data_pd_id = $(this).attr('data-pd-id');
             if(result_string != ""){
+                if($('.camping-position.selected').length){
+                    $('.show_select_cart .item').remove();
+                    $('input[name="select_cart"]').val('');
+                    $('.camping-position.selected').removeClass('selected');
+                }
+
+                $(this).addClass('selected');
                 if($('input[name="select_cart"]').val() != ""){
                     result_string = ',' + result_string;
                     tmp_select_cart_val = $('input[name="select_cart"]').val();
