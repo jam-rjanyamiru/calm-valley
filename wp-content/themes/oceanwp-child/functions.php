@@ -35,6 +35,7 @@ Class CalmValley
         add_action('wp_head', [$this, 'show_something'], 10);
         add_filter('pre_get_posts', [$this, 'exclude_other_post_types_from_search'] );
         add_shortcode( 'search_camping_cart_form', [$this, 'search_camping_cart_book_record_form'] );
+        add_action( 'admin_menu', [$this, 'add_menu_page']);
     }
 
     public function load_frontend_files()
@@ -50,10 +51,59 @@ Class CalmValley
         if(!session_id()) {
             session_start();
         }
-//
-//        error_log(print_r('show_something__start', 1));
-//        error_log(print_r($_SESSION, 1));
-//        error_log(print_r('show_something__ending', 1));
+    }
+
+    public function show_setting_holiday(){
+        if($_POST['from'] == 'setting_holiday'){
+            $post_date = sanitize_text_field($_POST['date']);
+
+            if( isset($post_date) ) {
+                update_option('custom_setting_holiday_date', $post_date);
+            }
+        }
+        ?>
+            <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/air-datepicker.min.css">
+            <script src="<?=get_stylesheet_directory_uri()?>/assets/js/air-datepicker.min.js"></script>
+            <script src="<?=get_stylesheet_directory_uri()?>/assets/js/datepicker.zh.js"></script>
+            <script src="<?=get_stylesheet_directory_uri()?>/assets/js/holiday_date.js"></script>
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+            <h3>設定假日日期</h3>
+            <div>
+                <?php
+                    if( get_option('custom_setting_holiday_date') !='' ){
+                        $explode_date = explode(',', get_option('custom_setting_holiday_date'));
+                        print('假日:<br>');
+                        foreach($explode_date as $date){
+                            print($date);
+                            print('<br>');
+                        }
+                    }
+                ?>
+            </div>
+            <form method="post">
+                <input type="hidden" name="from" value="setting_holiday" >
+                <label for="setting_date">假日日期</label>
+                <input type="datepicker" id="setting_date" name="date" value="<?=(get_option('custom_setting_holiday_date') != '')?get_option('custom_setting_holiday_date'):''?>">
+                <div>請參考範例格式: 如果是西元2020年2月2號的話，請輸入「2020-02-02」</div>
+                <br>
+                <input type="submit" value="送出">
+            </form>
+        <?php
+    }
+
+    public function add_menu_page(){
+
+        add_menu_page(
+            '設定假日時間',
+            '設定假日時間',
+            'manage_options',
+            'setting_holiday_date',
+            array($this, 'show_setting_holiday'),
+            '',
+            2
+        );
+
     }
 
     public function filter_camping_cart_book_record(){
@@ -61,10 +111,7 @@ Class CalmValley
         if(!isset($_POST['from']) || !isset($_POST['phone']) || !isset($_POST['birth'])){
             return false;
         }
-        
-        error_log(print_r('ASDQWE', 1));
-        error_log(print_r($_POST, 1));
-        
+
         //只開放查詢60天內預約的紀錄
         $start_date = new DateTime('now');
         $start_date = $start_date->format('Y/m/d');
@@ -205,34 +252,120 @@ Class CalmValley
         global $woocommerce;
         $woocommerce->cart->empty_cart();
         $cart_data = str_replace("\\", "" ,$_POST['result_arr_data']);
+
+        $count_holidays = 0;
+        $count_booking_days = 0;
+        $count_weekdays = 0;
+
+        $weekday_variation_id = 1;
+        $holiday_variation_id = 1;
+
+        $weekday_price = 1;
+        $holiday_price = 1;
+
+        $timestamp_booking_start_date = strtotime($_SESSION['booking_start_date']);
+        $timestamp_booking_end_date = strtotime($_SESSION['booking_end_date']);
+        $count_booking_days = ($timestamp_booking_end_date - $timestamp_booking_start_date)/(60*60*24);
+
+        if( get_option('custom_setting_holiday_date') != '' ){
+            $explode_date = explode(',', get_option('custom_setting_holiday_date'));
+            //                    Custom Holidays
+            $tmp_timestamp_booking_end_date = strtotime("-1 day", $timestamp_booking_end_date);
+
+            foreach($explode_date as $date){
+                $timestamp_holiday_date = strtotime($date);
+                if($timestamp_holiday_date == $timestamp_booking_start_date
+                    || (
+                        $timestamp_holiday_date > $timestamp_booking_start_date
+                        && $timestamp_holiday_date <= $tmp_timestamp_booking_end_date)
+                ){
+                    $count_holidays += 1;
+                    continue;
+                }
+            }
+        }
+
+        //                    General Holidays
+        $timestamp = $timestamp_booking_start_date;
+        $skipdays = array("Friday", "Saturday");
+        while ($timestamp < $timestamp_booking_end_date) {
+            if ( (in_array(date("l", $timestamp), $skipdays)) )
+            {
+                $count_holidays += 1;
+            }
+            $timestamp = strtotime("+1 day", $timestamp);
+        }
+        $count_weekdays = $count_booking_days - $count_holidays;
+
+
         foreach(json_decode($cart_data) as $key => $single_data){
+//            目前這個迴圈都只會跑一次，因為一台購物車只會接收一次顧客要求的商品，但實際上有可能有兩個商品，因為規格問題
             $product_id = $single_data->pd_id;
             $quantity = 1;
-            $choose_meal = $single_data->choose_meal;
-            $is_driving = $single_data->is_driving;
             $max_people = $single_data->max_people;
             $product_cart_id = WC()->cart->generate_cart_id( $product_id );
 
             $product = wc_get_product($product_id);
-            $variation_id = 0;
-            $price = 0;
             foreach ($product->get_available_variations() as $variation) {
+//                確認此商品的可變類型是否有等於顧客想要的 => 再取出平日和假日的原價和促銷價
                 $variation_id = $variation['variation_id'];
-                $price = $variation['display_price'];
-                break;
+                $variation_product = wc_get_product($variation_id);
+                
+                error_log(print_r('ZXCASD', 1));
+                error_log(print_r($variation['attributes']['attribute_pa_max_people'], 1));
+                if ($variation['attributes']['attribute_pa_max_people'] == $max_people) {
+                    if ($variation['attributes']['attribute_pa_is_weekday_or_is_holiday'] == 'weekday') {
+                        if ($variation_product->get_sale_price() != '') {
+                            $weekday_price = $variation_product->get_sale_price();
+                        }else{
+                            $weekday_price = $variation_product->get_regular_price();
+                        }
+                        $weekday_variation_id = $variation_id;
+                    }
+                    else if ($variation['attributes']['attribute_pa_is_weekday_or_is_holiday'] == 'holiday') {
+                        if ($variation_product->get_sale_price() != '') {
+                            $holiday_price = $variation_product->get_sale_price();
+                        }else{
+                            $holiday_price = $variation_product->get_regular_price();
+                        }
+                        $holiday_variation_id = $variation_id;
+                    }
+
+                    if ($weekday_variation_id != 1 && $holiday_variation_id != 1){
+                        break;
+                    }
+                }
             }
 
+
             if( ! WC()->cart->find_product_in_cart( $product_cart_id ) ){
-                $booking_pd_meta_data = array(
-                    '_booking_price' => $price,
-                    '_booking_start_date' => $_SESSION['booking_start_date'],
-                    '_booking_end_date' => $_SESSION['booking_end_date'],
-                    '_booking_duration' => $_SESSION['booking_days'],
-                    '_ebs_start' => $_SESSION['booking_start_date'],
-                    '_ebs_end' => $_SESSION['booking_end_date'],
-                );
-                $variation = array('attribute_pa_choose_meal' => $choose_meal, 'attribute_pa_is_driving' => $is_driving, 'attribute_pa_max_people' => $max_people);
-                WC()->cart->add_to_cart( $product_id, $quantity, $variation_id ,$variation, $booking_pd_meta_data);
+                if ($count_weekdays > 0) {
+                    $total_weekday_price = ($weekday_price * $count_weekdays);
+                    $weekday_booking_pd_meta_data = array(
+                        '_booking_price' => $total_weekday_price,
+                        '_booking_start_date' => $_SESSION['booking_start_date'],
+                        '_booking_end_date' => $_SESSION['booking_end_date'],
+                        '_booking_duration' => $_SESSION['booking_days'],
+                        '_ebs_start' => $_SESSION['booking_start_date'],
+                        '_ebs_end' => $_SESSION['booking_end_date'],
+                    );
+                    $weekday_variation_data = array('attribute_pa_max_people' => $max_people);
+                    WC()->cart->add_to_cart( $product_id, $quantity, $weekday_variation_id ,$weekday_variation_data, $weekday_booking_pd_meta_data);
+                }
+
+                if ($count_holidays > 0) {
+                    $total_holiday_price = ($holiday_price * $count_holidays);
+                    $holiday_booking_pd_meta_data = array(
+                        '_booking_price' => $total_holiday_price,
+                        '_booking_start_date' => $_SESSION['booking_start_date'],
+                        '_booking_end_date' => $_SESSION['booking_end_date'],
+                        '_booking_duration' => $_SESSION['booking_days'],
+                        '_ebs_start' => $_SESSION['booking_start_date'],
+                        '_ebs_end' => $_SESSION['booking_end_date'],
+                    );
+                    $holiday_variation_data = array('attribute_pa_max_people' => $max_people);
+                    WC()->cart->add_to_cart( $product_id, $quantity, $holiday_variation_id ,$holiday_variation_data, $holiday_booking_pd_meta_data);
+                }
             }
         }
 
@@ -313,34 +446,28 @@ Class CalmValley
                 $order_booking_start_date = strtotime($item->get_meta( '_booking_start_date', true ));
                 $order_booking_end_date = strtotime($item->get_meta( '_booking_end_date', true ));
 
-                if(
+//                If order date in customer date, it will be exclude.
+                $is_cover = false;
+                if (
                     is_numeric($order_booking_start_date)
                     && is_numeric($order_booking_end_date)
-                    && (
-                            (
-                                $order_booking_start_date >= $customer_booking_date_timestamp
-                                &&
-                                $order_booking_end_date <= $customer_end_date_timestamp
-                            )
-                        ||  (
-                                $order_booking_start_date <= $customer_booking_date_timestamp
-                                &&
-                                $order_booking_end_date >= $customer_end_date_timestamp
-                            )
-                        ||
-                            (
-                                $order_booking_start_date <= $customer_booking_date_timestamp
-                                &&
-                                $order_booking_end_date >= $customer_booking_date_timestamp
-                            )
-                        ||
-                            (
-                                $order_booking_start_date <= $customer_end_date_timestamp
-                                &&
-                                $order_booking_end_date >= $customer_end_date_timestamp
-                            )
-                    )
                 ) {
+                    if ($order_booking_end_date > $customer_end_date_timestamp) {
+                        $right_start_date = $order_booking_start_date;
+                        $left_end_date = $customer_end_date_timestamp;
+                        if ($right_start_date <= $left_end_date) {
+                            $is_cover = true;
+                        }
+                    }else {
+                        $right_start_date = $customer_booking_date_timestamp;
+                        $left_end_date = $order_booking_end_date;
+                        if ($right_start_date <= $left_end_date) {
+                            $is_cover = true;
+                        }
+                    }
+                }
+
+                if ($is_cover) {
                     array_push($exclude, $item->get_product_id());
                 }
             }
@@ -354,11 +481,24 @@ Class CalmValley
         ]);
 
         $camping_location = array();
+        if(isset($_POST['is_taking_pet']) && $_POST['is_taking_pet'] == '1'){
+            $is_taking_pet = 1;
+        }else{
+            $is_taking_pet = 0;
+        }
+
         foreach($pds as $pd){
             $tmp_location_x = get_post_meta($pd->get_id(), 'camping_location_x', 1);
             $tmp_location_y = get_post_meta($pd->get_id(), 'camping_location_y', 1);
             $bookable = get_post_meta($pd->get_id(), '_bookable', 1);
-            if($bookable == 'yes' && $tmp_location_x != '' && $tmp_location_y != ''){
+            $tmp_is_taking_pet = get_post_meta($pd->get_id(), 'is_taking_pet', 1);
+            if($tmp_is_taking_pet != 1){
+                $tmp_is_taking_pet = 0;
+            }else{
+                $tmp_is_taking_pet = 1;
+            }
+
+            if($bookable == 'yes' && $tmp_location_x != '' && $tmp_location_y != '' && $tmp_is_taking_pet == $is_taking_pet){
                 $camping_location[$pd->get_id()] = [intval($tmp_location_x), intval($tmp_location_y)];
             }
         }

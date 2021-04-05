@@ -19,7 +19,7 @@ jQuery(function ($){
             });
         $('input[name="start_date"]').data('datepicker').selectDate(minDate);
 
-        $('select[name="days"]').focusout(function (){
+        $('select[name="days"], input[name="is_taking_pet"]').focusout(function (){
             check_available_camper();
         });
 
@@ -118,25 +118,43 @@ jQuery(function ($){
     }
 
     function check_available_camper(){
+        if(  $('.mapDiv02 .result').length ){
+            console.log('refresh');
+            $('.show_select_cart .item').remove();
+            $('input[name="select_cart"]').val('');
+            $('.camping-position.selected').removeClass('selected');
+            $('.camping-position').css('background', 'white').attr('data-pd-id', '');
+            $('.mapDiv02 .result').css('background', 'white').text('');
+        }
+
+        if (
+            $('input[name="start_date"]').val() === undefined
+            || $('input[name="start_date"]').val() == ''
+        ){
+            $('.mapDiv02 .result').text('您好，請選擇入住日期');
+            $('.mapDiv02 .result').css('background', 'red');
+
+            return;
+        }
+
         $.ajax({
             url:'/wc-api/available_camper',
             method :'post',
             data:{
                 'start_date':$('input[name="start_date"]').val(),
                 'days':$('select[name="days"]').val(),
+                'is_taking_pet':$('input[name="is_taking_pet"]:checked').val(),
             }
         }).success(function (msg) {
             let tmp_available_camper_obj = JSON.parse(msg);
-            $('.mapDiv02 .result').text(msg);
-            $('.mapDiv02 .result').css('background', 'red');
+            $('.mapDiv02 .result').text(msg).css('background', 'greenyellow');
 
             let available_camper_obj = {};
             $.each(tmp_available_camper_obj, function (key, value){
                 available_camper_obj[key] = value.toString();
             })
 
-            $('.camping-position').css('background', 'white');
-            $('.camping-position').attr('data-pd-id', '');
+            $('.camping-position').css('background', 'white').attr('data-pd-id', '');
             var pd_id = 0;
             $.each($('.camping-position'), function (key, value){
                 if($.inArray($(value).data('position').toString(), Object.values(available_camper_obj)) !== -1){
@@ -148,7 +166,7 @@ jQuery(function ($){
                       }
                     })
 
-                    $(value).css('background', 'red');
+                    $(value).css('background', 'greenyellow');
                     $(value).attr('data-pd-id', pd_id);
                 }
             });

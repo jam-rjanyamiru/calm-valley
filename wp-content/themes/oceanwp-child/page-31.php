@@ -89,6 +89,7 @@ get_header();
                             </div>
                             <input type="hidden" name="select_cart">
                             現在選擇的露營車<div class="show_select_cart"></div>
+                            <input type="checkbox" name="is_taking_pet" value="1">是否有攜帶寵物
                         </form>
                         <div>
                             <button class="to-step-two-btn">下一步選擇露營車資訊</button>
