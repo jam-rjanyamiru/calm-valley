@@ -9,10 +9,6 @@ echo 'STEP THREE';
     <div>合約內容</div>
     <div>
         <!-- wp:paragraph -->
-        <p>[search_camping_cart_form]</p>
-        <!-- /wp:paragraph -->
-
-        <!-- wp:paragraph -->
         <p></p>
         <!-- /wp:paragraph -->
 

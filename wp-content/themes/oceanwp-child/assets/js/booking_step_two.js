@@ -4,9 +4,8 @@ jQuery(function ($){
         $.each($('.cart-item'), function (key ,value){
             tmp_arr_data = {
                 'pd_id' : $(value).attr('data-pd-id'),
-                'choose_meal' : $(value).find('select[name="choose_meal"]').val(),
-                'is_driving' : $(value).find('input[name="is_driving"]:checked').val(),
                 'max_people' : $(value).find('select[name="max_people"]').val(),
+
             };
            result_arr_data[key] = tmp_arr_data;
         })
@@ -23,21 +22,25 @@ jQuery(function ($){
                 console.log(msg);
             }
         });
+        json_data = {'to':'three'};
+        for (i=0;i<$('input[name="booking_days"]').val();i++) {
+            json_data['meal_' + i] = $('input[name="meal_' + i + '"]:checked').val();
+            json_data['eat_beef_' + i] = $('input[name="eat_beef_' + i + '"]:checked').val();
+            json_data['meal_time_' + i] = $('input[name="meal_time_' + i + '"]:checked').val();
+        }
 
         $.ajax({
             url: '/wc-api/change_camping_content',
             type: "POST",
-            data:{
-                "to":"three"
-            }
+            data:json_data,
         }).success(function (msg) {
             if(msg != ''){
                 $('.mapDiv01').remove();
                 $('.mapDiv02').remove();
                 $('.mainDiv').children().not('.progress').remove();
                 $('.mainDiv').append(msg);
-                $('.progress .progress-bar.progress-bar-striped').eq(2).css('width', '16.6%');
-                $('.progress .progress-bar.progress-bar-striped').eq(2).attr('aria-valuenow', '16.6');
+                $('.progress .progress-bar.progress-bar-striped').eq(3).css('width', '16.6%');
+                $('.progress .progress-bar.progress-bar-striped').eq(3).attr('aria-valuenow', '16.6');
             }
         });
     })
@@ -65,4 +68,5 @@ jQuery(function ($){
 
         return obj;
     };
+
 });

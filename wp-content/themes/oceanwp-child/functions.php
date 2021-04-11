@@ -36,6 +36,7 @@ Class CalmValley
         add_filter('pre_get_posts', [$this, 'exclude_other_post_types_from_search'] );
         add_shortcode( 'search_camping_cart_form', [$this, 'search_camping_cart_book_record_form'] );
         add_action( 'admin_menu', [$this, 'add_menu_page']);
+        add_action( 'woocommerce_thankyou', [$this, 'add_camping_cart_booking_info']);
     }
 
     public function load_frontend_files()
@@ -50,6 +51,18 @@ Class CalmValley
     public function show_something(){
         if(!session_id()) {
             session_start();
+        }
+    }
+
+    public function add_camping_cart_booking_info($order_id ){
+        if ( ! $order_id )
+            return;
+
+        if( ! get_post_meta( $order_id, '_thankyou_action_done', true ) ) {
+            $order = wc_get_order($order_id);
+            $order->add_order_note($_SESSION['custom_order_note']);
+            $order->update_meta_data('_thankyou_action_done', true);
+            $order->save();
         }
     }
 
@@ -310,9 +323,7 @@ Class CalmValley
 //                確認此商品的可變類型是否有等於顧客想要的 => 再取出平日和假日的原價和促銷價
                 $variation_id = $variation['variation_id'];
                 $variation_product = wc_get_product($variation_id);
-                
-                error_log(print_r('ZXCASD', 1));
-                error_log(print_r($variation['attributes']['attribute_pa_max_people'], 1));
+
                 if ($variation['attributes']['attribute_pa_max_people'] == $max_people) {
                     if ($variation['attributes']['attribute_pa_is_weekday_or_is_holiday'] == 'weekday') {
                         if ($variation_product->get_sale_price() != '') {
@@ -336,7 +347,6 @@ Class CalmValley
                     }
                 }
             }
-
 
             if( ! WC()->cart->find_product_in_cart( $product_cart_id ) ){
                 if ($count_weekdays > 0) {
@@ -401,14 +411,27 @@ Class CalmValley
         switch($_POST['to'])
         {
             case 'two':
-                include_once (get_stylesheet_directory().'/includes/booking_camping_step_two.php');
                 $_SESSION['booking_start_date'] = $_POST['start_date'];
                 $_SESSION['booking_end_date'] = $_POST['end_date'];
                 $_SESSION['booking_days'] = $_POST['days'];
                 $_SESSION['booking_step'] = '2';
+                include_once (get_stylesheet_directory().'/includes/booking_camping_step_two.php');
                 break;
             case 'three':
                 $_SESSION['booking_step'] = '3';
+                $tmp_order_note = '';
+                $trans_meal = ['roast' => '燒烤', 'steam' => '蒸煮海鮮'];
+                $trans_eat_beef = ['y' => '是', 'n' => '否'];
+                $trans_meal_time = ['any' => '不限時段', 'five_thirty' => '下午 5點30~7點', 'seven' => '下午 7點~8點30'];
+                for($i=0;$i<$_SESSION['booking_days'];$i++){
+                     $tmp_order_note .= '
+                         入住第幾天:'.($i+1).' ,
+                        晚餐:'.$trans_meal[$_POST['meal_'.$i]].' ,
+                        是否吃牛: '.$trans_eat_beef[$_POST['eat_beef_'.$i]].' ,
+                        時段: '.$trans_meal_time[$_POST['meal_time_'.$i]];
+                }
+                $_SESSION['custom_order_note'] = $tmp_order_note;
+
                 include_once (get_stylesheet_directory().'/includes/booking_camping_step_three.php');
                 break;
             case 'four':
@@ -455,13 +478,13 @@ Class CalmValley
                     if ($order_booking_end_date > $customer_end_date_timestamp) {
                         $right_start_date = $order_booking_start_date;
                         $left_end_date = $customer_end_date_timestamp;
-                        if ($right_start_date <= $left_end_date) {
+                        if ($right_start_date < $left_end_date) {
                             $is_cover = true;
                         }
                     }else {
                         $right_start_date = $customer_booking_date_timestamp;
                         $left_end_date = $order_booking_end_date;
-                        if ($right_start_date <= $left_end_date) {
+                        if ($right_start_date < $left_end_date) {
                             $is_cover = true;
                         }
                     }

@@ -1,9 +1,12 @@
 jQuery(function ($){
     window.onload = function (){
+        $('.progress .progress-bar.progress-bar-striped').eq(0).css('width', '16.6%');
+        $('.progress .progress-bar.progress-bar-striped').eq(0).attr('aria-valuenow', '16.6');
+
         $('#simpleTipModal').modal({ backdrop: 'static', keyboard: false});
         $('.close-modal-btn').click(function (){
-            $('.progress .progress-bar.progress-bar-striped').eq(0).css('width', '16.6%');
-            $('.progress .progress-bar.progress-bar-striped').eq(0).attr('aria-valuenow', '16.6');
+            $('.progress .progress-bar.progress-bar-striped').eq(1).css('width', '16.6%');
+            $('.progress .progress-bar.progress-bar-striped').eq(1).attr('aria-valuenow', '16.6');
         })
 
         minDate = new Date();
@@ -90,7 +93,7 @@ jQuery(function ($){
             }
             end_date = yyyy + '/' + mm + '/' + dd;
 
-            if($('input[name="select_cart"]').val() != ''){
+            if($('input[name="select_cart"]').val() != '') {
                 $.ajax({
                     url: '/wc-api/change_camping_content',
                     type: "POST",
@@ -106,11 +109,11 @@ jQuery(function ($){
                         $('.mapDiv02').remove();
                         $('.mainDiv').children().not('.progress').remove();
                         $('.mainDiv').append(msg);
-                        $('.progress .progress-bar.progress-bar-striped').eq(1).css('width', '16.6%');
-                        $('.progress .progress-bar.progress-bar-striped').eq(1).attr('aria-valuenow', '16.6');
+                        $('.progress .progress-bar.progress-bar-striped').eq(2).css('width', '16.6%');
+                        $('.progress .progress-bar.progress-bar-striped').eq(2).attr('aria-valuenow', '16.6');
                     }
                 })
-            } else{
+            } else {
                 alert('您未選取位置，請選擇露營車');
             }
 
