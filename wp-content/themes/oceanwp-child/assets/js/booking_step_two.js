@@ -69,4 +69,42 @@ jQuery(function ($){
         return obj;
     };
 
+    $('.meal-type input').change(function (){
+        this_meal_input = $(this);
+        count_day = this_meal_input.attr('name').split('_')[1];
+        booking_date = this_meal_input.parents('form').find('input[name="booking_date_'+count_day+'"]').val();
+
+        $.ajax({
+            url: '/wc-api/check_camping_dinner_available',
+            type:'post',
+            data:{
+                'booking_date': booking_date,
+            }
+        }).success(function (msg) {
+            if(msg != ''){
+                //要針對陣列做JSON.parse(可能)，或是陣列解析
+                available_time = JSON.parse(msg);
+                console.log(available_time);
+                console.log(available_time.length);
+                if(available_time.length != 0){
+                    available_time.push('any');
+                }
+                is_disabled = false;
+                $.each(this_meal_input.parents('form').find('.meal-time input'), function (key ,value){
+                    if($.inArray($(value).val(), available_time) === -1){
+                        $(value).attr('disabled', true);
+                        is_disabled = true;
+                    }
+                });
+
+                if(is_disabled){
+                    this_meal_input.parents('form').find('.meal-time input[value="any"]').attr('disabled', true);
+
+                }
+
+                this_meal_input.parents('form').find('.meal-time').css('display', 'block');
+            }
+        });
+    });
+
 });
