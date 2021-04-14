@@ -32,6 +32,7 @@ Class CalmValley
         add_action('woocommerce_api_add_custom_data_to_cart_step_two', [$this, 'add_custom_data_to_cart_step_two'], 10);
         add_action('woocommerce_api_change_camping_content', [$this, 'change_camping_content'], 10);
         add_action('woocommerce_api_filter_camping_cart_book_record', [$this, 'filter_camping_cart_book_record'], 10);
+        add_action('woocommerce_api_check_camping_dinner_available', [$this, 'check_camping_dinner_available'], 10);
         add_action('wp_head', [$this, 'show_something'], 10);
         add_filter('pre_get_posts', [$this, 'exclude_other_post_types_from_search'] );
         add_shortcode( 'search_camping_cart_form', [$this, 'search_camping_cart_book_record_form'] );
@@ -54,6 +55,70 @@ Class CalmValley
         }
     }
 
+    public function check_camping_dinner_available(){
+
+        if(!isset($_POST['booking_date']))
+            return 0;
+
+
+        $booking_date = $_POST['booking_date'];
+        $valid_orders = wc_get_orders(['post_status' => [
+                'wc-pending',
+                'wc-processing',
+                'wc-on-hold',
+                'wc-completed',
+            ],
+            'date_before' => date("Y-m-d", strtotime($booking_date)),
+            'date_after' => date('Y-m-d', strtotime($booking_date . '-60 days')),
+        ]);
+
+        $all_available_time = ['five_thirty', 'seven'];
+        $five_thirty_count_booking = 0;
+        $seven_count_booking = 0;
+        $max_booking_amount = 6;
+        foreach($valid_orders as $order){
+            if( $order_booking_info = unserialize(get_post_meta($order->get_id(), '_order_booking_info', 1)) ){
+                foreach($order_booking_info as $single_day_info){
+                    if( str_replace('-', '/' ,$booking_date) == str_replace('-', '/', $single_day_info['booking_date']) ){
+                        if( $single_day_info['time_period'] == 'any' ){
+                            $five_thirty_count_booking += 1;
+                            $seven_count_booking += 1;
+                        }else if( $single_day_info['time_period'] == 'seven' ){
+                            $seven_count_booking += 1;
+                        }else if( $single_day_info['time_period'] == 'five_thirty'){
+                            $five_thirty_count_booking += 1;
+                        }
+
+                        if( $five_thirty_count_booking == $max_booking_amount){
+                            if (($key = array_search('five_thirty', $all_available_time)) !== false) {
+                                unset($all_available_time[$key]);
+                            }
+                        }
+
+
+                        if( $seven_count_booking == $max_booking_amount){
+                            if (($key = array_search('seven', $all_available_time)) !== false) {
+                                unset($all_available_time[$key]);
+                            }
+                        }
+
+                        if( empty($all_available_time) ){
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if( empty($all_available_time) ){
+                break;
+            }
+        }
+
+        $all_available_time = array_values(array_filter($all_available_time));
+        echo json_encode($all_available_time);
+        exit;
+    }
+
     public function add_camping_cart_booking_info($order_id ){
         if ( ! $order_id )
             return;
@@ -62,6 +127,7 @@ Class CalmValley
             $order = wc_get_order($order_id);
             $order->add_order_note($_SESSION['custom_order_note']);
             $order->update_meta_data('_thankyou_action_done', true);
+            $order->update_meta_data('_order_booking_info',  sanitize_text_field(serialize($_SESSION['order_booking_info'])));
             $order->save();
         }
     }
@@ -423,13 +489,25 @@ Class CalmValley
                 $trans_meal = ['roast' => '燒烤', 'steam' => '蒸煮海鮮'];
                 $trans_eat_beef = ['y' => '是', 'n' => '否'];
                 $trans_meal_time = ['any' => '不限時段', 'five_thirty' => '下午 5點30~7點', 'seven' => '下午 7點~8點30'];
+                $tmp_date = $_SESSION['booking_start_date'];
+                $order_booking_info_arr = [];
                 for($i=0;$i<$_SESSION['booking_days'];$i++){
-                     $tmp_order_note .= '
-                         入住第幾天:'.($i+1).' ,
-                        晚餐:'.$trans_meal[$_POST['meal_'.$i]].' ,
+                    $tmp_order_note .= '
+                         入住日期: '.$tmp_date.' ,
+                        晚餐: '.$trans_meal[$_POST['meal_'.$i]].' ,
                         是否吃牛: '.$trans_eat_beef[$_POST['eat_beef_'.$i]].' ,
                         時段: '.$trans_meal_time[$_POST['meal_time_'.$i]];
+
+                    array_push($order_booking_info_arr, [
+                            'booking_date' => $tmp_date,
+                            'dinner' => $_POST['meal_'.$i],
+                            'eat_beef' => $_POST['eat_beef_'.$i],
+                            'time_period' => $_POST['meal_time_'.$i],
+                        ]);
+
+                    $tmp_date = date('Y/m/d', strtotime($tmp_date . "+1 days" ));
                 }
+                $_SESSION['order_booking_info'] = $order_booking_info_arr;
                 $_SESSION['custom_order_note'] = $tmp_order_note;
 
                 include_once (get_stylesheet_directory().'/includes/booking_camping_step_three.php');
