@@ -38,6 +38,7 @@ Class CalmValley
         add_shortcode( 'search_camping_cart_form', [$this, 'search_camping_cart_book_record_form'] );
         add_action( 'admin_menu', [$this, 'add_menu_page']);
         add_action( 'woocommerce_thankyou', [$this, 'add_camping_cart_booking_info']);
+        add_action( 'template_redirect', [$this, 'redirect_another_page']);
     }
 
     public function load_frontend_files()
@@ -52,6 +53,20 @@ Class CalmValley
     public function show_something(){
         if(!session_id()) {
             session_start();
+        }
+    }
+
+    public function redirect_another_page(){
+        if(
+            is_shop()
+            ||  is_cart()
+            ||  is_product()
+            ||  is_product_category()
+            ||  is_product_tag()
+            ||  is_product_taxonomy()
+        ){
+            wp_redirect(home_url() . '/booking');
+            exit();
         }
     }
 
