@@ -4,8 +4,6 @@ jQuery(function ($){
         $('.search_camping_cart_book_record_form .submit-btn').click(function (e){
             e.preventDefault();
 
-            console.log('click!!')
-
             if(
                 $('.search_camping_cart_book_record_form input[name="phone"]').val() != ''
                 || $('.search_camping_cart_book_record_form input[name="birth"]').val() != ''
@@ -19,7 +17,6 @@ jQuery(function ($){
                     "birth":$('.search_camping_cart_book_record_form input[name="birth"]').val(),
                 }
             }).success(function (msg) {
-                console.log(msg);
                 if (msg != '') {
                     if( $('.search-result-div').length){
                         $('.search-result-div').remove();
