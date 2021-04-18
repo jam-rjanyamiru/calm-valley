@@ -91,7 +91,7 @@ jQuery(function ($){
             {
                 mm = '0' + mm;
             }
-            end_date = yyyy + '/' + mm + '/' + dd;
+            end_date = yyyy + '-' + mm + '-' + dd;
 
             if($('input[name="select_cart"]').val() != '') {
                 $.ajax({

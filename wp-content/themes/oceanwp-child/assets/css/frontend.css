@@ -34,3 +34,7 @@
     color: #333!important;
     text-decoration: none!important;
 }
+
+.custom-css-field-hidden{
+    display:none!important;
+}
