@@ -332,6 +332,10 @@ Class CalmValley
         if ( ! $order_id )
             return;
 
+        if(!session_id()) {
+            session_start();
+        }
+
         if( ! get_post_meta( $order_id, '_thankyou_action_done', true ) ) {
             $order = wc_get_order($order_id);
             $order->add_order_note($_SESSION['custom_order_note']);
