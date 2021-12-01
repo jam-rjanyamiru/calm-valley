@@ -38,3 +38,7 @@
 .custom-css-field-hidden{
     display:none!important;
 }
+
+#wpmc-back-to-cart {
+    display: none;
+}

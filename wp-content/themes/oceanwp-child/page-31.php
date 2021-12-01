@@ -45,7 +45,7 @@ get_header();
         <table>
             <tbody class="mapTable">
                <?php
-               for($i=0;$i<26;$i++){
+               for($i=0;$i<10;$i++){
                    echo '<tr>';
                    for($j=0;$j<10;$j++){
                        echo '<td class="camping-position" data-pd-id="" data-position="'.$i.','.$j.'">'.$i.','.$j.'</td>';
@@ -92,7 +92,7 @@ get_header();
                             <input type="checkbox" name="is_taking_pet" value="1">是否有攜帶寵物
                         </form>
                         <div>
-                            <button class="to-step-two-btn">下一步選擇露營車資訊</button>
+                            <a class="button wpmc-nav-button to-step-two-btn">下一步選擇露營車資訊</a>
                         </div>
                     </div>
                 </div>

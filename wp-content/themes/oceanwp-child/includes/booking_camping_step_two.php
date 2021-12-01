@@ -1,6 +1,10 @@
 <?php
 if(isset($_SESSION['booking_pds'])){
     ?>
+    <!-- jquery-confirm -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
     <script src="/wp-content/themes/oceanwp-child/assets/js/booking_step_two.js"></script>
     <div class="booking-step-two">
         <h3>露營車規格</h3>
@@ -70,7 +74,8 @@ if(isset($_SESSION['booking_pds'])){
         <?php
     }
     ?>
-        <button class="to-step-three-btn">前往第三步驟按鈕</button>
+        <a class="button wpmc-nav-button" href="<?=home_url() . '/booking'?>">重新選擇</a>
+        <a class="button wpmc-nav-button to-step-three-btn">前往第三步驟按鈕</a>
     </div>
     <?php
 }
