@@ -120,10 +120,11 @@ Class CalmValley
 
             $order_booking_info = unserialize(get_post_meta($selected_id, '_order_booking_info', 1));
             foreach($order_booking_info as $info){
-                $order_meal_info['dinner_date'] = $info['booking_date'];
-                $order_meal_info['dinner'] = $info['dinner'];
-                $order_meal_info['eat_beef'] = $info['eat_beef'];
-                $order_meal_info['time_period'] = $info['time_period'];
+                $tmp_order_meal_info['dinner_date'] = $info['booking_date'];
+                $tmp_order_meal_info['dinner'] = $info['dinner'];
+                $tmp_order_meal_info['eat_beef'] = $info['eat_beef'];
+                $tmp_order_meal_info['time_period'] = $info['time_period'];
+                array_push($order_meal_info, $tmp_order_meal_info);
             }
         }
 
@@ -205,13 +206,15 @@ Class CalmValley
                         $trans_meal_time = ['any' => '不限時段', 'five_thirty' => '下午 5點30~7點', 'seven' => '下午 7點~8點30'];
 
                         echo '<div style="font-weight:bold;">訂單用餐資訊</div>';
-                        ?>
-                        <div>用餐日期:<?=$order_meal_info['dinner_date']?></div>
-                        <div>晚餐餐點:<?=$trans_meal[$order_meal_info['dinner']]?></div>
-                        <div>是否吃牛:<?=$trans_eat_beef[$order_meal_info['eat_beef']]?></div>
-                        <div>時段:<?=$trans_meal_time[$order_meal_info['time_period']]?></div>
-                        <hr>
-                        <?php
+                        foreach ($order_meal_info as $info):
+                            ?>
+                            <div>用餐日期:<?=$info['dinner_date']?></div>
+                            <div>晚餐餐點:<?=$trans_meal[$info['dinner']]?></div>
+                            <div>是否吃牛:<?=$trans_eat_beef[$info['eat_beef']]?></div>
+                            <div>時段:<?=$trans_meal_time[$info['time_period']]?></div>
+                            <hr>
+                            <?php
+                        endforeach;
                     }
 
 
@@ -288,7 +291,7 @@ Class CalmValley
         foreach($valid_orders as $order){
             if( $order_booking_info = unserialize(get_post_meta($order->get_id(), '_order_booking_info', 1)) ){
                 foreach($order_booking_info as $single_day_info){
-                    if( str_replace('-', '/' ,$booking_date) == str_replace('-', '/', $single_day_info['booking_date']) ){
+                    if( $single_day_info['dinner'] == 'steam' && str_replace('-', '/' ,$booking_date) == str_replace('-', '/', $single_day_info['booking_date']) ){
                         if( $single_day_info['time_period'] == 'any' ){
                             $five_thirty_count_booking += 1;
                             $seven_count_booking += 1;

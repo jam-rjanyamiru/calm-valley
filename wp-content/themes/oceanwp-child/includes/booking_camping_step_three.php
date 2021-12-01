@@ -144,5 +144,6 @@ echo 'STEP THREE';
         <p><strong><u>貼心小叮嚀</u></strong><br>1.農場因樹蔭綠地寬廣，常有自然昆蟲出沒，請注意預防蚊蟲，並攜帶隨身藥物。2.客房服務至PM11：00，住宿客請斟酌時間。<br>3. 園區很安靜，聲音會傳很遠，為確保住宿客人都能享受大自然的靜謐，晚上10 點後請輕聲細語。<br><br></p>
         <!-- /wp:paragraph -->
     </div>
-    <button class="to-step-four-btn">我同意(前往第四步驟按鈕)</button>
+    <a class="button wpmc-nav-button" href="<?=home_url() . '/booking'?>">重新選擇</a>
+    <a class="button wpmc-nav-button to-step-four-btn">我同意(前往第四步驟按鈕)</a>
 </div>
