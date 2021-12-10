@@ -21,8 +21,6 @@ $global_order_contact_email_activated = get_option('global_order_contact_email_a
         </thead>
         <tbody>
             <?php
-            error_log(print_r('QWE', 1));
-            error_log(print_r($order_notes, 1));
             foreach($order_notes as $order_id => $content)
             {
                 echo '<tr>';

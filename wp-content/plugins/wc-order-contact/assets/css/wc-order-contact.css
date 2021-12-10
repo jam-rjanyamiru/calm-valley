@@ -23,74 +23,79 @@
 
 /*message page*/
 .qa-q p, .qa-p p {
-    word-break: break-word; }
+    word-break: break-word;
+}
 
 .qa-q {
     background: rgba(0, 0, 0, 0.02);
     border-right: 2px solid #002350;
     padding: 20px;
-    max-width: 300px;
-    float: right;
     margin-bottom: 20px;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box; }
-@media only screen and (min-width: 768px) {
-    .qa-q {
-        max-width: 480px; } }
+    box-sizing: border-box;
+    margin-left: 75%;
+}
+
 
 .qa-a {
     background: rgba(0, 0, 0, 0.02);
     border-left: 2px solid #002350;
     padding: 20px;
-    max-width: 300px;
-    float: left;
     margin-bottom: 20px;
     -webkit-box-sizing: border-box;
-    box-sizing: border-box; }
-@media only screen and (min-width: 768px) {
-    .qa-a {
-        max-width: 480px; }
+    box-sizing: border-box;
+    margin-right: 75%;
 }
 
 .message-qa-area {
     clear: both;
-    margin-bottom: 10px; }
+    margin-bottom: 10px;
+}
 
 .message-qa-area .name {
     font-size: 12px;
     line-height: 15px;
-    margin-bottom: 0; }
+    margin-bottom: 0;
+}
 
 .message-qa-area .time {
     font-size: 11px;
     line-height: 20px;
     color: #002350;
-    margin-bottom: 5px; }
+    margin-bottom: 5px;
+}
 
 .message-qa-area .message {
-    margin-bottom: 0; }
+    margin-bottom: 0;
+}
 
 .message-qa.woocommerce form .form-row textarea {
-    height: 12em; }
+    height: 12em;
+}
 
 .message-qa input[type="submit"] {
     float: right;
-    margin-right: 0; }
+    margin-right: 0;
+}
 
-textarea#order_qa_comments{
+textarea#order_qa_comments {
     width: 99%!important;
     background: black!important;
     color: white!important;
 }
 
-.form_modify_email_activated{
+.form_modify_email_activated {
     line-height: 12vh;
 }
 
-.toplevel_page_order_contact_center form, form.order_contact_edit{
+.toplevel_page_order_contact_center form, form.order_contact_edit {
     margin-bottom: 1vh;
 }
 
-label[for="order_id"], label#email_activated_switch_label{
+label[for="order_id"], label#email_activated_switch_label {
     margin-bottom: 0rem;
+}
+
+body.woocommerce-account .woocommerce-OrderUpdates.commentlist.notes {
+    display: none;
 }

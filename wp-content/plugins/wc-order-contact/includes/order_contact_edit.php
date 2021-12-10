@@ -2,7 +2,7 @@
     <h4><?=__('Order Contact Edit', $this->setting_parameters['plugin_name'])?></h4>
     <form method="GET" class="<?=$this->setting_parameters['edit_slug']?>">
         <label for="order_id"><?=__('Order ID', $this->setting_parameters['plugin_name'])?></label>
-        <select data-change-url="<?=$this->setting_parameters['edit_slug']?>" id="order_id" name="order_id">
+        <select class="order_contact_edit_select" data-change-url="<?=$this->setting_parameters['edit_slug']?>" id="order_id" name="order_id">
             <option value=""><?=__('Not Selected', $this->setting_parameters['plugin_name'])?></option>
             <?php
             foreach ( $orders as $order_id )
@@ -90,7 +90,8 @@
                     $author_name = $last_name.' '.$first_name;
                 }
 
-                if($author->caps['administrator'] == true)
+                $note_from = get_comment_meta($note['note_id'], 'note_from', 1);
+                if($note_from != 'frontend')
                 {
                     echo '<div class="qa-a">';
                 }else{
@@ -101,7 +102,6 @@
                 echo '<p class="time">'.$note_date.' </p>';
                 echo '<p class="message">'.$note_content.'</p>';
                 echo '</div>';
-                echo '<div class="clearfix"></div>';
             }
         }
         ?>
