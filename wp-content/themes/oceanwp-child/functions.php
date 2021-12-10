@@ -368,8 +368,16 @@ Class CalmValley
                 <?php
                     if( get_option('custom_setting_holiday_date') !='' ){
                         $explode_date = explode(',', get_option('custom_setting_holiday_date'));
-                        print('假日:<br>');
+                        $new_explode_date = array();
                         foreach($explode_date as $date){
+                            $new_date = trim($date);
+                            array_push($new_explode_date, $new_date);
+                        }
+
+                        sort($new_explode_date);
+
+                        print('假日:<br>');
+                        foreach($new_explode_date as $date){
                             print($date);
                             print('<br>');
                         }
@@ -379,7 +387,7 @@ Class CalmValley
             <form method="post">
                 <input type="hidden" name="from" value="setting_holiday" >
                 <label for="setting_date">假日日期</label>
-                <input type="datepicker" id="setting_date" name="date" value="<?=(get_option('custom_setting_holiday_date') != '')?get_option('custom_setting_holiday_date'):''?>">
+                <input style="width: 40%; height: 100px;" type="datepicker" id="setting_date" name="date" value="<?=(get_option('custom_setting_holiday_date') != '')?get_option('custom_setting_holiday_date'):''?>">
                 <div>請參考範例格式: 如果是西元2020年2月2號的話，請輸入「2020-02-02」</div>
                 <br>
                 <input type="submit" value="送出">

@@ -19,13 +19,16 @@ jQuery(function ($)
         $(this).parents('form').first().submit();
     });
 
-    $.each($('#order_id'), function(key, value)
-    {
-       if($(value).parent('form').hasClass($(value).data('change-url')))
-       {
-           $(value).select2();
-       }
-    });
+    if ($('select.order_contact_edit_select').length) {
+        if($('select.order_contact_edit_select').parent('form').hasClass($('select.order_contact_edit_select').data('change-url')))
+        {
+            $('select.order_contact_edit_select').select2();
+        }
+    }
+
+    if ($('select.order_contact_edit_select').val() == '') {
+        $('div.order-qa.woocommerce').hide();
+    }
 
    $('#order_id').on('change', function (e)
    {

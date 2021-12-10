@@ -41,18 +41,7 @@ if( ! class_exists('WC_Order_Contact') ) :
             $this->include_files();
         }
 
-        private function include_files()
-        {
-            if ( is_admin() || is_page('18') ):
-
-                wp_register_style($this->setting_parameters['plugin_name'].'-css', plugin_dir_url(__FILE__) .'/assets/css/'.$this->setting_parameters['plugin_name'].'.css');
-                wp_enqueue_style($this->setting_parameters['plugin_name'].'-css');
-
-                wp_register_script($this->setting_parameters['plugin_name'].'-js', plugin_dir_url(__FILE__) . '/assets/js/'.$this->setting_parameters['plugin_name'].'.js');
-                wp_enqueue_script($this->setting_parameters['plugin_name'].'-js');
-
-            endif;
-        }
+        private function include_files(){}
 
         private function register_hooks()
         {
@@ -62,6 +51,38 @@ if( ! class_exists('WC_Order_Contact') ) :
             add_action( 'woocommerce_api_modify_email_activated', [$this, 'modify_email_activated']); //後台更改是否寄信
             add_action( 'woocommerce_new_order', [$this, 'add_email_activate_meta']); //在創建訂單時，就建立是否要寄信通知的post_meta
             add_action( 'just_send_email', [$this, 'just_send_email_function'], 10, 4); //寄信方式改成排程，避免loading速度太慢。
+            add_action( 'admin_enqueue_scripts', [$this, 'include_admin_files']);
+            add_action( 'wp_enqueue_scripts', [$this, 'include_frontend_files']);
+        }
+
+        public function include_frontend_files()
+        {
+            wp_register_style( 'select2-css', '//cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css');
+            wp_enqueue_style( 'select2-css' );
+
+            wp_register_script( 'select2-js', '//cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.js');
+            wp_enqueue_script( 'select2-js' );
+
+            wp_register_style($this->setting_parameters['plugin_name'].'-css', plugin_dir_url(__FILE__) .'/assets/css/'.$this->setting_parameters['plugin_name'].'.css');
+            wp_enqueue_style($this->setting_parameters['plugin_name'].'-css');
+
+            wp_register_script($this->setting_parameters['plugin_name'].'-js', plugin_dir_url(__FILE__) . '/assets/js/'.$this->setting_parameters['plugin_name'].'.js');
+            wp_enqueue_script($this->setting_parameters['plugin_name'].'-js');
+        }
+
+        public function include_admin_files()
+        {
+            wp_register_style( 'select2-css', '//cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css');
+            wp_enqueue_style( 'select2-css' );
+
+            wp_register_script( 'select2-js', '//cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.js');
+            wp_enqueue_script( 'select2-js' );
+
+            wp_register_style($this->setting_parameters['plugin_name'].'-css', plugin_dir_url(__FILE__) .'/assets/css/'.$this->setting_parameters['plugin_name'].'.css');
+            wp_enqueue_style($this->setting_parameters['plugin_name'].'-css');
+
+            wp_register_script($this->setting_parameters['plugin_name'].'-js', plugin_dir_url(__FILE__) . '/assets/js/'.$this->setting_parameters['plugin_name'].'.js');
+            wp_enqueue_script($this->setting_parameters['plugin_name'].'-js');
         }
 
         public function just_send_email_function($to, $subject, $content, $headers)
@@ -146,7 +167,8 @@ if( ! class_exists('WC_Order_Contact') ) :
                             $author_name = $last_name.' '.$first_name;
                         }
 
-                        if($author->caps['administrator'] == true)
+                        $note_from = get_comment_meta($note['note_id'], 'note_from', 1);
+                        if($note_from != 'frontend')
                         {
                             echo '<div class="qa-a">';
                         }else{
@@ -156,7 +178,6 @@ if( ! class_exists('WC_Order_Contact') ) :
                         echo '<p class="time">'.$note_date.' </p>';
                         echo '<p class="message">'.$note_content.'</p>';
                         echo '</div>';
-                        echo '<div class="clearfix"></div>';
                     }
                     ?>
                 </div>
@@ -208,21 +229,21 @@ if( ! class_exists('WC_Order_Contact') ) :
             }
 
             $redirect_url = '/';
-            if($_REQUEST['from'] == 'frontend')
+            if ($_REQUEST['from'] == 'frontend')
             {
                 $to = get_option('admin_email'); //需要設定管理員的信箱
                 $redirect_url = home_url().'/member-center/view-order/'.$order_id;
-            }elseif($_REQUEST['from'] == 'backend')
+            } elseif($_REQUEST['from'] == 'backend')
             {
                 $to_id = $order->get_customer_id();
                 $to = get_user_by('id', $to_id)->data->user_email;
                 $redirect_url = admin_url('admin.php?page='.$this->setting_parameters['edit_slug'].'&order_id='.$order_id);
             }
+            add_comment_meta( $comment_id, 'note_from', $_REQUEST['from']);
 
-            if(get_post_meta($order_id, 'order_contact_email_activated', 1) == 1)
+           if(get_post_meta($order_id, 'order_contact_email_activated', 1) == 1)
             {
-                sleep(5);
-                wp_schedule_single_event( time(), 'just_send_email', array($to, $subject, $content, $headers));
+                do_action('just_send_email', $to, $subject, $content, $headers);
             }
             wp_redirect($redirect_url);
             exit;
@@ -311,6 +332,7 @@ if( ! class_exists('WC_Order_Contact') ) :
             $total_pages = ceil($total_rows / $per_page); //在下方引入檔案時，會使用到。
             $index = 0;
             $tmp_order_notes = $order_notes;
+
             //因為此陣列的key是訂單編號，所以不方便使用for迴圈。
             foreach($tmp_order_notes as $key => $value)
             {
@@ -369,7 +391,7 @@ if( ! class_exists('WC_Order_Contact') ) :
             $results = $wpdb->get_results("
                                 SELECT * FROM   $table_perfixed WHERE  `comment_post_ID` = $order_id 
                                 AND  `comment_type` LIKE  'order_note'
-                                AND  `comment_approved` != 'trash' ORDER BY `comment_date` DESC ");
+                                AND  `comment_approved` != 'trash' ORDER BY `comment_date` ASC");
 
             $table_perfixed_second = $wpdb->prefix . 'commentmeta';
             foreach($results as $note)
