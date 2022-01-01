@@ -26,7 +26,9 @@ Class CalmValley
 
     private function register_hooks()
     {
+        add_action('wp_loaded', [$this, 'create_cron_job']); //觸發排程
         add_action('wp_enqueue_scripts', [$this, 'load_frontend_files'], 101);
+        add_action('wp_footer', [$this, 'load_frontend_files_footer'], 101);
         add_action('woocommerce_api_available_camper', [$this, 'available_camper'], 10);
         add_action('woocommerce_api_add_custom_data_to_cart_step_one', [$this, 'add_custom_data_to_cart_step_one'], 10);
         add_action('woocommerce_api_add_custom_data_to_cart_step_two', [$this, 'add_custom_data_to_cart_step_two'], 10);
@@ -38,26 +40,179 @@ Class CalmValley
         add_action( 'admin_menu', [$this, 'add_menu_page']);
         add_action( 'woocommerce_thankyou', [$this, 'add_camping_cart_booking_info']);
         add_action( 'template_redirect', [$this, 'redirect_another_page']);
+        add_action( 'woocommerce_thankyou_bacs', [$this, 'show_info_delay_will_delete_order'] );
+        add_action( 'calm_valley_delete_expired_orders', [$this, 'delete_expired_orders'] );
     }
 
-    public function load_frontend_files()
-    {
+    public function create_cron_job() {
+        if ( !wp_next_scheduled( 'calm_valley_delete_expired_orders' ) )
+        {
+		    wp_schedule_event( time() + 10, 'daily', 'calm_valley_delete_expired_orders' );
+        }
+
+    }
+
+    public function load_frontend_files() {
         wp_register_style('frontend-from-ocean-child', get_stylesheet_directory_uri() . '/assets/css/frontend.css');
         wp_enqueue_style('frontend-from-ocean-child');
 
         wp_register_script('frontend-from-ocean-child', get_stylesheet_directory_uri() . '/assets/js/frontend.js');
         wp_enqueue_script('frontend-from-ocean-child');
+
     }
 
-    public function show_export_orders(){
+    public function load_frontend_files_footer() {
+        if (is_checkout()) {
+            ?>
+            <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/air-datepicker.min.css">
+            <script src="<?=get_stylesheet_directory_uri()?>/assets/js/air-datepicker.min.js"></script>
+            <script src="<?=get_stylesheet_directory_uri()?>/assets/js/datepicker.zh.js"></script>
+            <?php
+        }
+    }
+
+    public function add_menu_page(){
+        add_menu_page(
+            '設定假日時間',
+            '設定假日時間',
+            'manage_options',
+            'setting_holiday_date',
+            array($this, 'show_setting_holiday'),
+            '',
+            2
+        );
+
+        add_menu_page(
+            '設定晚餐資訊',
+            '設定晚餐資訊',
+            'manage_options',
+            'setting_dinner_info',
+            array($this, 'setting_dinner_info'),
+            '',
+            2
+        );
+
+        add_menu_page(
+            '匯出CheckIn訂單',
+            '匯出CheckIn訂單',
+            'manage_options',
+            'calm_valley_export_orders',
+            array($this, 'show_export_orders'),
+            '',
+            3
+        );
+
+        add_menu_page(
+            '匯出Kitchen訂單',
+            '匯出Kitchen訂單',
+            'manage_options',
+            'calm_valley_export_kitchen_orders',
+            array($this, 'show_export_kitchen_orders'),
+            '',
+            3
+        );
+
+    }
+
+    public function setting_dinner_info() {
+        if($_POST['from'] == 'setting_dinner_info'){
+            $dinner_info = $_POST['max_dinner_desk_amount'];
+            $dinner_item_01 = $_POST['dinner_item_01'];
+            $dinner_item_02 = $_POST['dinner_item_02'];
+            $dinner_time_period_01 = $_POST['dinner_time_period_01'];
+            $dinner_time_period_02 = $_POST['dinner_time_period_02'];
+
+            if( isset($dinner_info) ) {
+                update_option('max_dinner_desk_amount', $dinner_info);
+            }
+
+            if( isset($dinner_item_01) ) {
+                update_option('dinner_item_01', $dinner_item_01);
+            }
+
+            if( isset($dinner_item_02) ) {
+                update_option('dinner_item_02', $dinner_item_02);
+            }
+
+            if( isset($dinner_time_period_01) ) {
+                update_option('dinner_time_period_01', $dinner_time_period_01);
+            }
+
+            if( isset($dinner_time_period_02) ) {
+                update_option('dinner_time_period_02', $dinner_time_period_02);
+            }
+        }
+        ?>
+        <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/air-datepicker.min.css">
+        <script src="<?=get_stylesheet_directory_uri()?>/assets/js/air-datepicker.min.js"></script>
+        <script src="<?=get_stylesheet_directory_uri()?>/assets/js/datepicker.zh.js"></script>
+        <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/setting_dinner.css">
+        <script src="<?=get_stylesheet_directory_uri()?>/assets/js/setting_dinner.js"></script>
+        <div class="setting_dinner_info" id="setting_dinner_info">
+            <h2>設定晚餐資訊</h2>
+            <form method="post">
+                <input type="hidden" name="from" value="setting_dinner_info">
+                <label for="max_dinner_desk_amount">晚餐-蒸煮海鮮的最大桌數</label>
+                <input type="number" min="1" id="max_dinner_desk_amount" name="max_dinner_desk_amount" value="<?=get_option('max_dinner_desk_amount')?>">
+                <hr>
+                <label for="dinner_item_01">晚餐項目一</label>
+                <input type="text" id="dinner_item_01" name="dinner_item_01" value="<?=get_option('dinner_item_01')?>">
+                <hr>
+                <label for="dinner_item_02">晚餐項目二</label>
+                <input type="text" id="dinner_item_02" name="dinner_item_02" value="<?=get_option('dinner_item_02')?>">
+                <hr>
+                <label for="dinner_time_period_01">晚餐時間項目一(結束時間為往後30分鐘)</label>
+                <input type="datepicker" id="dinner_time_period_01" class="only-time" name="dinner_time_period_01" value="<?=get_option('dinner_time_period_01')?>">
+                <hr>
+                <label for="dinner_time_period_02">晚餐時間項目二(結束時間為往後30分鐘)</label>
+                <input type="datepicker" id="dinner_time_period_02" class="only-time" name="dinner_time_period_02" value="<?=get_option('dinner_time_period_02')?>">
+                <hr>
+                <input type="submit">
+            </form>
+            <div id="export-result">
+        </div>
+<?php
+    }
+
+    public function delete_expired_orders() {
+        $option = wc_parse_relative_date_option( get_option( 'woocommerce_trash_pending_orders' ) );
+        $query = apply_filters(
+				'woocommerce_trash_pending_orders_query_args',
+				array(
+					'date_created' => '<' . strtotime( '-' . $option['number'] . ' ' . $option['unit'] ),
+					'limit'        => 20,
+					'status'       => ['wc-pending', 'wc-on-hold'],
+					'type'         => 'shop_order',
+				)
+			);
+
+        $orders = wc_get_orders( $query );
+		$count  = 0;
+
+		if ( $orders ) {
+            foreach ( $orders as $order ) {
+                $order->delete( true );
+				$count ++;
+			}
+		}
+
+        wp_schedule_event( time() + 10, 'daily', 'calm_valley_delete_expired_orders' );
+    }
+
+    public function show_info_delay_will_delete_order()
+    {
+        ?>
+        <div>* 您好，訂單將會保留「3天」，時間內匯款完成後，加上管理員確認完畢，就會寄信跟您告知，非常感謝您的配合！（管理員每天至少會確認一次）
+        <?php
+    }
+
+    public function show_export_orders() {
         $all_order_ids = get_posts(array(
-            'post_status' => array('wc-pending',
-                'wc-on-hold',
-                'wc-processing',
-                'wc-completed',
-                'wc-cancelled',
-                'wc-refunded',
-                'wc-failed',
+            'post_status' => array(
+                    'wc-pending',
+                    'wc-on-hold',
+                    'wc-processing',
+                    'wc-completed'
             ),
             'post_type' => 'shop_order' ,
             'numberposts' => '-1',
@@ -85,12 +240,9 @@ Class CalmValley
 
                 $order_buyer_info['first_name'] = $order->get_billing_first_name();
                 $order_buyer_info['last_name'] = $order->get_billing_last_name();
-                $order_buyer_info['billing_id_card'] = get_post_meta($order_id, 'billing_id_card', true);
+                $order_buyer_info['billing_phone'] = get_post_meta($order_id, '_billing_phone', true);
+                $order_buyer_info['billing_address_1'] = get_post_meta($order_id, '_billing_address_1', true);
                 $order_buyer_info['billing_gender'] = get_post_meta($order_id, 'billing_gender', true);
-                $order_buyer_info['billing_tel'] = get_post_meta($order_id, 'billing_tel', true);
-                $order_buyer_info['billing_phone'] = get_post_meta($order_id, 'billing_phone', true);
-                $order_buyer_info['billing_address_1'] = get_post_meta($order_id, 'billing_address_1', true);
-                $order_buyer_info['billing_country'] = get_post_meta($order_id, 'billing_country', true);
                 $order_buyer_info['billing_birth'] = get_post_meta($order_id, 'billing_birth', true);
 
                 $order_user_info['first_name'] = get_post_meta($order_id, 'user_first_name', true);
@@ -99,7 +251,6 @@ Class CalmValley
                 $order_user_info['user_gender'] = get_post_meta($order_id, 'user_gender', true);
                 $order_user_info['user_phone'] = get_post_meta($order_id, 'user_phone', true);
                 $order_user_info['order_comments'] = get_post_meta($order_id, 'order_comments', true);
-                $order_user_info['order_country'] = get_post_meta($order_id, 'order_country', true);
                 $order_user_info['user_birth'] = get_post_meta($order_id, 'user_birth', true);
                 $order_user_info['user_address_1'] = get_post_meta($order_id, 'user_address_1', true);
 
@@ -111,12 +262,13 @@ Class CalmValley
                 $order_info['user_add_fourth_meal'] = get_post_meta($order_id, 'user_add_fourth_meal', 1);
                 $order_info['user_is_vegetarian'] = get_post_meta($order_id, 'user_is_vegetarian', 1);
                 $order_info['user_is_driving'] = get_post_meta($order_id, 'user_is_driving', 1);
+                $order_info['order_child_total'] = get_post_meta($order_id, '_order_child_total', 1);
+                $order_info['order_adult_total'] = get_post_meta($order_id, '_order_adult_total', 1);
 //                    因為一個購物車限定一個商品，而當入住期間有不同價格，便會造成有兩個商品，
 //                    ，然後上述取得的資訊不會因為只讀一個商品而導致錯誤，還有預期是一列為一筆訂單，
 //                    因此這裡直接break，以防出問題。
                 break;
             }
-
 
             $order_booking_info = unserialize(get_post_meta($selected_id, '_order_booking_info', 1));
             foreach($order_booking_info as $info){
@@ -128,14 +280,13 @@ Class CalmValley
             }
         }
 
-
         ?>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="<?=get_stylesheet_directory_uri()?>/assets/js/export_order.js"></script>
         <div class="export_orders_content" id="export_result">
-            <h3>匯出訂單</h3>
+            <h3>匯出CheckIn訂單</h3>
             <form method="post">
                 <select name="order_id">
                     <?php
@@ -154,10 +305,12 @@ Class CalmValley
                         ?>
                         <div>預約起始日:<?=$order_info['booking_start_date']?></div>
                         <div>預約結束日:<?=$order_info['booking_end_date']?></div>
-                        <div>預約最大人數:<?=$order_info['max_people']?></div>
+                        <div>用餐人數:<?=$order_info['max_people']?></div>
+                        <div>幾個大人:<?=$order_info['order_adult_total']?></div>
+                        <div>幾個小孩:<?=$order_info['order_child_total']?></div>
                         <div>統一編號:<?=$order_info['user_invoice_number']?></div>
                         <div>行動管家:<?=$order_info['user_action_butler']?></div>
-                        <div>是否增加第四餐:<?=$order_info['user_add_fourth_meal']?></div>
+                        <div>是否在營區用中餐(費用另結):<?=$order_info['user_add_fourth_meal']?></div>
                         <div>是否吃素:<?=$order_info['user_is_vegetarian']?></div>
                         <div>是否開車:<?=$order_info['user_is_driving']?></div>
                         <hr>
@@ -170,12 +323,9 @@ Class CalmValley
                         ?>
                         <div>使用者名字:<?=$order_user_info['first_name']?></div>
                         <div>使用者姓氏:<?=$order_user_info['last_name']?></div>
-                        <div>使用者身分證字號:<?=$order_user_info['user_id_card']?></div>
                         <div>使用者性別:<?=$order_user_info['user_gender']?></div>
                         <div>使用者手機:<?=$order_user_info['user_phone']?></div>
                         <div>訂單備註:<?=$order_user_info['order_comments']?></div>
-                        <div>訂單備註:<?=$order_user_info['order_comments']?></div>
-                        <div>訂單國家:<?=$order_user_info['order_country']?></div>
                         <div>使用者生日:<?=$order_user_info['user_birth']?></div>
                         <div>使用者地址:<?=$order_user_info['user_address_1']?></div>
                         <hr>
@@ -188,12 +338,9 @@ Class CalmValley
                         ?>
                         <div>訂購者名字:<?=$order_buyer_info['first_name']?></div>
                         <div>訂購者姓氏:<?=$order_buyer_info['last_name']?></div>
-                        <div>訂購者身分證字號:<?=$order_buyer_info['billing_id_card']?></div>
                         <div>訂購者性別:<?=$order_buyer_info['billing_gender']?></div>
-                        <div>訂購者室內電話:<?=$order_buyer_info['billing_tel']?></div>
                         <div>訂購者手機:<?=$order_buyer_info['billing_phone']?></div>
                         <div>訂購者地址:<?=$order_buyer_info['billing_address_1']?></div>
-                        <div>訂購者國家:<?=$order_buyer_info['billing_country']?></div>
                         <div>訂購者生日:<?=$order_buyer_info['billing_birth']?></div>
                         <hr>
                         <?php
@@ -201,9 +348,9 @@ Class CalmValley
 
 
                     if(!empty($order_meal_info)){
-                        $trans_meal = ['roast' => '燒烤', 'steam' => '蒸煮海鮮'];
+                        $trans_meal = ['item_01' => get_option('dinner_item_01'), 'item_02' => get_option('dinner_item_02'), 'steam' => '蒸煮海鮮'];
                         $trans_eat_beef = ['y' => '是', 'n' => '否'];
-                        $trans_meal_time = ['any' => '不限時段', 'five_thirty' => '下午 5點30~7點', 'seven' => '下午 7點~8點30'];
+                        $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01'), 'time_period_02' => get_option('dinner_time_period_02')];
 
                         echo '<div style="font-weight:bold;">訂單用餐資訊</div>';
                         foreach ($order_meal_info as $info):
@@ -252,6 +399,108 @@ Class CalmValley
         }
     }
 
+    public function show_export_kitchen_orders() {
+        if (isset($_POST['start_date']) || isset($_POST['end_date'])) {
+            $start_date = $_POST['start_date'];
+            $end_date = $_POST['end_date'];
+            global $wpdb;
+            $wp_posts_table_str = $wpdb->get_blog_prefix() . "posts";
+            $query = "SELECT ID, post_date FROM " . $wp_posts_table_str .
+            " WHERE $wp_posts_table_str.post_date >= '" . date('Y-m-d', strtotime($start_date . ' - 60 days')) . "'" .
+            " AND $wp_posts_table_str.post_type = 'shop_order'" .
+            " AND $wp_posts_table_str.post_status IN ('publish', 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed')" .
+            " ORDER BY $wp_posts_table_str.post_date";
+
+            $query = $wpdb->prepare($query);
+            $all_order_info = $wpdb->get_results($query);
+
+            $order_meal_info = array();
+            $trans_meal = ['item_01' => get_option('dinner_item_01'), 'item_02' => get_option('dinner_item_02'), 'steam' => '蒸煮海鮮'];
+            $trans_eat_beef = ['y' => '是', 'n' => '否'];
+            $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01'), 'time_period_02' => get_option('dinner_time_period_01')];
+
+            if(is_array($all_order_info)){
+                foreach ($all_order_info as $order_info) {
+                    $order_booking_info = unserialize(get_post_meta($order_info->ID, '_order_booking_info', 1));
+                    foreach($order_booking_info as $info){
+                        $tmp_order_meal_info['dinner_date'] = $info['booking_date'];
+                        $tmp_order_meal_info['dinner'] = $trans_meal[$info['dinner']];
+                        $tmp_order_meal_info['eat_beef'] = $trans_eat_beef[$info['eat_beef']];
+                        $tmp_order_meal_info['time_period'] = $trans_meal_time[$info['time_period']];
+
+                        if (!isset($order_meal_info[$tmp_order_meal_info['dinner_date'] ])) {
+                          $order_meal_info[ $tmp_order_meal_info['dinner_date'] ] = array();
+                        }
+                        array_push($order_meal_info[$tmp_order_meal_info['dinner_date']] , $tmp_order_meal_info);
+                    }
+                }
+            }
+        }
+        ?>
+        <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/air-datepicker.min.css">
+        <script src="<?=get_stylesheet_directory_uri()?>/assets/js/air-datepicker.min.js"></script>
+        <script src="<?=get_stylesheet_directory_uri()?>/assets/js/datepicker.zh.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="<?=get_stylesheet_directory_uri()?>/assets/js/export_kitchen_order.js"></script>
+        <div class="export_orders_content" id="export_result">
+            <h3>匯出Kitchen訂單</h3>
+            <form method="post">
+                <label>開始日期</label>
+                <input type="datepicker" name="start_date" value="<?=$_POST['start_date']?>" placeholder="開始時間">
+               <label>結束日期</label>
+                <input type="datepicker" name="end_date" value="<?=$_POST['end_date']?>" placeholder="結束時間">
+                <input type="submit">
+            </form>
+            <div id="export-result">
+                <?php
+                echo '<h3>廚房用餐資訊</h3>';
+                if (isset($start_date) && isset($end_date)) {
+                      if( !empty($order_meal_info) ) {
+                        foreach ($order_meal_info as $dinner_date => $info) {
+                            if (
+                                    strtotime($start_date) > strtotime($dinner_date) ||
+                                    strtotime($end_date) < strtotime($dinner_date)
+                                ) {
+                                continue;
+                            }
+                            foreach ($info as $meal_info) {
+                                ?>
+                                <div>用餐日期:<?=$meal_info['dinner_date']?></div>
+                                <div>晚餐餐點:<?=$meal_info['dinner']?></div>
+                                <div>是否吃牛:<?=$meal_info['eat_beef']?></div>
+                                <div>時段:<?=$meal_info['time_period']?></div>
+                                <hr>
+                                <?php
+                            }
+                       }
+                    }
+                }else{
+                    echo '無';
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+        if (isset($start_date) && isset($end_date)) {
+                ?>
+                <script>
+                    var element = document.getElementById('export-result');
+                    var opt = {
+                        margin:       1,
+                        filename:     'Kitchen_<?=$start_date . "_" . $end_date?>.pdf',
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2 },
+                        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                    };
+
+                    html2pdf(element, opt);
+                </script>
+                <?php
+        }
+    }
+
     public function redirect_another_page(){
         if(
             is_shop()
@@ -267,10 +516,8 @@ Class CalmValley
     }
 
     public function check_camping_dinner_available(){
-
         if(!isset($_POST['booking_date']))
             return 0;
-
 
         $booking_date = $_POST['booking_date'];
         $valid_orders = wc_get_orders(['post_status' => [
@@ -284,32 +531,28 @@ Class CalmValley
             'date_after' => date('Y-m-d', strtotime($booking_date . '-60 days')),
         ]);
 
-        $all_available_time = ['five_thirty', 'seven'];
-        $five_thirty_count_booking = 0;
-        $seven_count_booking = 0;
-        $max_booking_amount = 6;
+        $all_available_time = ['time_period_01', 'time_period_02'];
+        $time_period_01_count_booking = 0;
+        $time_period_02_count_booking = 0;
+        $max_booking_amount = 1;
         foreach($valid_orders as $order){
             if( $order_booking_info = unserialize(get_post_meta($order->get_id(), '_order_booking_info', 1)) ){
                 foreach($order_booking_info as $single_day_info){
                     if( $single_day_info['dinner'] == 'steam' && str_replace('-', '/' ,$booking_date) == str_replace('-', '/', $single_day_info['booking_date']) ){
-                        if( $single_day_info['time_period'] == 'any' ){
-                            $five_thirty_count_booking += 1;
-                            $seven_count_booking += 1;
-                        }else if( $single_day_info['time_period'] == 'seven' ){
-                            $seven_count_booking += 1;
-                        }else if( $single_day_info['time_period'] == 'five_thirty'){
-                            $five_thirty_count_booking += 1;
+                        if( $single_day_info['time_period'] == 'time_period_02' ){
+                            $time_period_02_count_booking += 1;
+                        } else if( $single_day_info['time_period'] == 'time_period_01'){
+                            $time_period_01_count_booking += 1;
                         }
 
-                        if( $five_thirty_count_booking == $max_booking_amount){
-                            if (($key = array_search('five_thirty', $all_available_time)) !== false) {
+                        if( $time_period_01_count_booking == $max_booking_amount){
+                            if (($key = array_search('time_period_01', $all_available_time)) !== false) {
                                 unset($all_available_time[$key]);
                             }
                         }
 
-
-                        if( $seven_count_booking == $max_booking_amount){
-                            if (($key = array_search('seven', $all_available_time)) !== false) {
+                        if( $time_period_02_count_booking == $max_booking_amount){
+                            if (($key = array_search('time_period_02', $all_available_time)) !== false) {
                                 unset($all_available_time[$key]);
                             }
                         }
@@ -340,10 +583,17 @@ Class CalmValley
         }
 
         if( ! get_post_meta( $order_id, '_thankyou_action_done', true ) ) {
+            error_log(print_r('debug_log', 1));
+            error_log(print_r($_SESSION, 1));
             $order = wc_get_order($order_id);
             $order->add_order_note($_SESSION['custom_order_note']);
             $order->update_meta_data('_thankyou_action_done', true);
             $order->update_meta_data('_order_booking_info',  sanitize_text_field(serialize($_SESSION['order_booking_info'])));
+            $order->update_meta_data('_order_child_total',  $_SESSION['order_child_total']);
+            $order->update_meta_data('_order_adult_total',  $_SESSION['order_adult_total']);
+            $order->update_meta_data('_accept_contract',  $_SESSION['accept_contract']);
+            $order->update_meta_data('_start_booking_date',  $_SESSION['']);
+            $order->update_meta_data('_end_booking_date',  $_SESSION['accept_contract']);
             $order->save();
         }
     }
@@ -393,30 +643,6 @@ Class CalmValley
                 <input type="submit" value="送出">
             </form>
         <?php
-    }
-
-    public function add_menu_page(){
-
-        add_menu_page(
-            '設定假日時間',
-            '設定假日時間',
-            'manage_options',
-            'setting_holiday_date',
-            array($this, 'show_setting_holiday'),
-            '',
-            2
-        );
-
-        add_menu_page(
-            '匯出訂單',
-            '匯出訂單',
-            'manage_options',
-            'calm_valley_export_orders',
-            array($this, 'show_export_orders'),
-            '',
-            3
-        );
-
     }
 
     public function filter_camping_cart_book_record(){
@@ -559,7 +785,9 @@ Class CalmValley
 
     public function search_camping_cart_book_record_form()
     {
-        include_once (get_stylesheet_directory().'/includes/search_camping_cart_book_record_form.php');
+        if (!is_admin()) {
+            include_once (get_stylesheet_directory().'/includes/search_camping_cart_book_record_form.php');
+        }
     }
 
     public function exclude_other_post_types_from_search($query){
@@ -736,9 +964,9 @@ Class CalmValley
             case 'three':
                 $_SESSION['booking_step'] = '3';
                 $tmp_order_note = '';
-                $trans_meal = ['roast' => '燒烤', 'steam' => '蒸煮海鮮'];
+                $trans_meal = ['item_01' => get_option('dinner_item_01'), 'item_02' => get_option('dinner_item_02'),  'steam' => '蒸煮海鮮'];
                 $trans_eat_beef = ['y' => '是', 'n' => '否'];
-                $trans_meal_time = ['any' => '不限時段', 'five_thirty' => '下午 5點30~7點', 'seven' => '下午 7點~8點30'];
+                $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01'), 'time_period_02' => get_option('dinner_time_period_02')];
                 $tmp_date = $_SESSION['booking_start_date'];
                 $order_booking_info_arr = [];
                 for($i=0;$i<$_SESSION['booking_days'];$i++){
@@ -752,13 +980,15 @@ Class CalmValley
                             'booking_date' => $tmp_date,
                             'dinner' => $_POST['meal_'.$i],
                             'eat_beef' => $_POST['eat_beef_'.$i],
-                            'time_period' => $_POST['meal_time_'.$i],
-                        ]);
+                            'time_period' => $_POST['meal_time_'.$i]
+                            ]);
 
                     $tmp_date = date('Y/m/d', strtotime($tmp_date . "+1 days" ));
                 }
                 $_SESSION['order_booking_info'] = $order_booking_info_arr;
                 $_SESSION['custom_order_note'] = $tmp_order_note;
+                $_SESSION['order_child_total'] = $_POST['child_total'];
+                $_SESSION['order_adult_total'] = $_POST['adult_total'];
 
                 include_once (get_stylesheet_directory().'/includes/booking_camping_step_three.php');
                 break;

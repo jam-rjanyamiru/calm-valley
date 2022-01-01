@@ -7,7 +7,7 @@ if(isset($_SESSION['booking_pds'])){
 
     <script src="/wp-content/themes/oceanwp-child/assets/js/booking_step_two.js"></script>
     <div class="booking-step-two">
-        <h3>露營車規格</h3>
+        <h3>露營餐點</h3>
     <?php
 //    目前只會有一個商品，所以只會跑一次loop
     foreach($_SESSION['booking_pds'] as $index => $pd_id){
@@ -17,7 +17,7 @@ if(isset($_SESSION['booking_pds'])){
             $values = wc_get_product_terms( $product->get_id(), 'pa_max_people', array( 'fields' => 'all' ) );
             ?>
                 <div class="max_people">
-                    露營車人數
+                    <?php _e('用餐人數', 'oceanwp')?>
                     <select name="max_people">
                 <?php
                     foreach($values as $val){
@@ -27,6 +27,10 @@ if(isset($_SESSION['booking_pds'])){
                     }
                 ?>
                     </select>
+                    <label for="total-adult">幾個大人</label>
+                    <input type="number" name="adult_total" min="0" max="2" step="1">
+                    <label for="total-child">幾個小孩</label>
+                    <input type="number" name="child_total" min="0" max="2" step="1">
                 </div>
                 <?php
                 print('總共有'.$_SESSION['booking_days'].'天');?>
@@ -37,12 +41,18 @@ if(isset($_SESSION['booking_pds'])){
                     ?>
                     <hr>
                     <form>
-                        <div class="day_<?=$i+1?>">第<?=$i+1?>天
+                        <div class="day_<?=$i+1?>">第<?=$i+1?>天晚餐
                             <input type="hidden" name="booking_date_<?=$i?>" value="<?=$tmp_date?>">
                             <div class="choose_meal">
                                 <div class="meal-type">
-                                    <label for="meal-roast-<?=$i?>">燒烤</label>
-                                    <input id="meal-roast-<?=$i?>" type="radio" name="meal_<?=$i?>" value="roast">
+                                    <?php if(get_option('dinner_item_01') != ''):?>
+                                    <label for="meal-item-01-<?=$i?>"><?=get_option('dinner_item_01')?></label>
+                                    <input id="meal-item-01-<?=$i?>" type="radio" name="meal_<?=$i?>" value="item_01">
+                                    <?php endif;?>
+                                    <?php if(get_option('dinner_item_02') != ''):?>
+                                    <label for="meal-item-02-<?=$i?>"><?=get_option('dinner_item_02')?></label>
+                                    <input id="meal-item-02-<?=$i?>" type="radio" name="meal_<?=$i?>" value="item_02">
+                                    <?php endif;?>
                                     <label for="meal-steam-<?=$i?>">蒸煮-海鮮</label>
                                     <input id="meal-steam-<?=$i?>" type="radio" name="meal_<?=$i?>" value="steam">
                                 </div>
@@ -55,12 +65,10 @@ if(isset($_SESSION['booking_pds'])){
                                 </div>
 
                                 <div class="meal-time" style="display:none;">
-                                    <label for="meal-time-any-<?=$i?>">不限時段</label>
-                                    <input id="meal-time-any-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="any">
-                                    <label for="meal-time-five-thirty-<?=$i?>">下午 5點30~7點</label>
-                                    <input id="meal-time-five-thirty-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="five_thirty">
-                                    <label for="meal-time-seven-<?=$i?>">下午 7點~8點30</label>
-                                    <input id="meal-time-seven-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="seven">
+                                    <label for="meal-time-period-01-<?=$i?>"><?=get_option('dinner_time_period_01')?></label>
+                                    <input id="meal-time-period-01-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="time_period_01">
+                                    <label for="meal-time-period-02-<?=$i?>"><?=get_option('dinner_time_period_02')?></label>
+                                    <input id="meal-time-period-02-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="time_period_02">
                                 </div>
                             </div>
                         </div>

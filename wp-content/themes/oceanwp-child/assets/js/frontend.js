@@ -45,4 +45,16 @@ jQuery(function ($){
         }
     })
 
+    minDate = new Date();
+    minDate.setFullYear(minDate.getFullYear() - 150);
+    maxDate = new Date();
+    $('input[name="billing_birth"]').datepicker({
+        minDate: minDate,
+        maxDate: maxDate,
+        language: 'zh',
+        view: 'years',
+        dateFormat: 'yyyy-mm-dd',
+    })
+
+    $('.woocommerce-NoticeGroup.woocommerce-NoticeGroup-checkout').hide();
 });

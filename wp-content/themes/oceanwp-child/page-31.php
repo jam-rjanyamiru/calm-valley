@@ -58,8 +58,6 @@ get_header();
             <!--        <img class="mapImage" src="https://hayaku.com.tw/images/map_all.jpg">-->
         </div>
         <div class="mapDiv02 col-12 col-xl-4">
-            <div>現在可選擇的露營車位址[[x, y, 商品01 ID], [x, y, 商品02 ID]]</div>
-            <div class="result"></div><br>
             <div>
                 <div>
                     <div>
