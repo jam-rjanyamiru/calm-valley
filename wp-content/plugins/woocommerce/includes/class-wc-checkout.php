@@ -791,25 +791,26 @@ class WC_Checkout {
 					}
 				}
 
-				if ( '' !== $data[ $key ] && in_array( 'state', $format, true ) ) {
-					$country      = isset( $data[ $fieldset_key . '_country' ] ) ? $data[ $fieldset_key . '_country' ] : WC()->customer->{"get_{$fieldset_key}_country"}();
-					$valid_states = WC()->countries->get_states( $country );
-
-					if ( ! empty( $valid_states ) && is_array( $valid_states ) && count( $valid_states ) > 0 ) {
-						$valid_state_values = array_map( 'wc_strtoupper', array_flip( array_map( 'wc_strtoupper', $valid_states ) ) );
-						$data[ $key ]       = wc_strtoupper( $data[ $key ] );
-
-						if ( isset( $valid_state_values[ $data[ $key ] ] ) ) {
-							// With this part we consider state value to be valid as well, convert it to the state key for the valid_states check below.
-							$data[ $key ] = $valid_state_values[ $data[ $key ] ];
-						}
-
-						if ( $validate_fieldset && ! in_array( $data[ $key ], $valid_state_values, true ) ) {
-							/* translators: 1: state field 2: valid states */
-							$errors->add( $key . '_validation', sprintf( __( '%1$s is not valid. Please enter one of the following: %2$s', 'woocommerce' ), '<strong>' . esc_html( $field_label ) . '</strong>', implode( ', ', $valid_states ) ), array( 'id' => $key ) );
-						}
-					}
-				}
+//				 TODO: 如果想要開啟國家和縣市之間的關係，請打開此段註解
+//				if ( '' !== $data[ $key ] && in_array( 'state', $format, true ) ) {
+//					$country      = isset( $data[ $fieldset_key . '_country' ] ) ? $data[ $fieldset_key . '_country' ] : WC()->customer->{"get_{$fieldset_key}_country"}();
+//					$valid_states = WC()->countries->get_states( $country );
+//
+//					if ( ! empty( $valid_states ) && is_array( $valid_states ) && count( $valid_states ) > 0 ) {
+//						$valid_state_values = array_map( 'wc_strtoupper', array_flip( array_map( 'wc_strtoupper', $valid_states ) ) );
+//						$data[ $key ]       = wc_strtoupper( $data[ $key ] );
+//
+//						if ( isset( $valid_state_values[ $data[ $key ] ] ) ) {
+//							// With this part we consider state value to be valid as well, convert it to the state key for the valid_states check below.
+//							$data[ $key ] = $valid_state_values[ $data[ $key ] ];
+//						}
+//
+//						if ( $validate_fieldset && ! in_array( $data[ $key ], $valid_state_values, true ) ) {
+//							/* translators: 1: state field 2: valid states */
+//							$errors->add( $key . '_validation', sprintf( __( '%1$s is not valid. Please enter one of the following: %2$s', 'woocommerce' ), '<strong>' . esc_html( $field_label ) . '</strong>', implode( ', ', $valid_states ) ), array( 'id' => $key ) );
+//						}
+//					}
+//				}
 
 				if ( $validate_fieldset && $required && '' === $data[ $key ] ) {
 					/* translators: %s: field name */

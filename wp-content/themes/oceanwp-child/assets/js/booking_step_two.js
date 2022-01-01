@@ -5,7 +5,10 @@ jQuery(function ($){
             if (
                 $(value).find('.meal-type input[type="radio"]:checked').length == 0 ||
                 $(value).find('.meal-if-eat-beef input[type="radio"]:checked').length == 0 ||
-                $(value).find('.meal-time input[type="radio"]:checked').length == 0
+                $(value).find('.meal-time input[type="radio"]:checked').length == 0 ||
+                $('input[name="adult_total"]').val() == '' ||
+                $('input[name="child_total"]').val() == '' ||
+                (parseInt($('input[name="adult_total"]').val()) + parseInt($('input[name="child_total"]').val())) != parseInt($('select[name="max_people"]').val())
             ) {
                 select_all = false;
                 return false;
@@ -13,7 +16,7 @@ jQuery(function ($){
         });
         if (select_all) {
             $.confirm({
-                title: '露營車規格確認',
+                title: '露營餐點確認',
                 animation: 'zoom',
                 closeAnimation: 'scale',
                 content: '貼心提醒您這次人數是' + $('select[name="max_people"]').val() + '人',
@@ -47,7 +50,8 @@ jQuery(function ($){
                             json_data['eat_beef_' + i] = $('input[name="eat_beef_' + i + '"]:checked').val();
                             json_data['meal_time_' + i] = $('input[name="meal_time_' + i + '"]:checked').val();
                         }
-
+                        json_data['adult_total'] = $('input[name="adult_total"]').val();
+                        json_data['child_total'] = $('input[name="child_total"]').val();
                         $.ajax({
                             url: '/wc-api/change_camping_content',
                             type: "POST",
@@ -71,11 +75,7 @@ jQuery(function ($){
         } else {
             alert('您好，請填完選項~我才知道您要什麼規格~');
         }
-
-
-
     })
-
 
     const arrayToString = (arr) => {
         let str = '';
@@ -108,7 +108,7 @@ jQuery(function ($){
         this_meal_input.parents('form').find('.meal-time input').prop('checked', false);
         this_meal_input.parents('form').find('.meal-time input').attr('disabled', true);
 
-        if (this_meal_input.val() == 'roast') {
+        if (this_meal_input.val() != 'steam') {
             this_meal_input.parents('form').find('.meal-time input').attr('disabled', false);
             this_meal_input.parents('form').find('.meal-time').css('display', 'block');
         } else {
@@ -123,22 +123,22 @@ jQuery(function ($){
                     //要針對陣列做JSON.parse(可能)，或是陣列解析
                     available_time = JSON.parse(msg);
 
-                    if(available_time.length != 0){
-                        available_time.push('any');
-                    }
-                    is_disabled = false;
+                    // if(available_time.length != 0){
+                    //     available_time.push('any');
+                    // }
+                    // is_disabled = false;
                     $.each(this_meal_input.parents('form').find('.meal-time input'), function (key ,value){
                         if($.inArray($(value).val(), available_time) === -1){
                             $(value).attr('disabled', true);
-                            is_disabled = true;
+                            // is_disabled = true;
                         } else {
                             $(value).attr('disabled', false);
                         }
                     });
 
-                    if(is_disabled){
-                        this_meal_input.parents('form').find('.meal-time input[value="any"]').attr('disabled', true);
-                    }
+                    // if(is_disabled){
+                    //     this_meal_input.parents('form').find('.meal-time input[value="any"]').attr('disabled', true);
+                    // }
 
                     this_meal_input.parents('form').find('.meal-time').css('display', 'block');
                 }
@@ -147,4 +147,24 @@ jQuery(function ($){
 
     });
 
+    $('select[name="max_people"]').change(function () {
+        $('input[name="adult_total"]').attr('max', $(this).val());
+        $('input[name="child_total"]').attr('max', $(this).val());
+        $('input[name="adult_total"]').val(0);
+        $('input[name="child_total"]').val(0);
+    })
+
+    $('input[name="child_total"]').change(function() {
+        if ( (parseInt($('input[name="adult_total"]').val()) + parseInt($(this).val())) > parseInt($('select[name="max_people"]').val()) ) {
+            $('input[name="adult_total"]').val( parseInt($('select[name="max_people"]').val()) - parseInt($(this).val()) );
+        }
+        $('input[name="adult_total"]').attr('max',  $('select[name="max_people"]').val() - $(this).val())
+    })
+
+    $('input[name="adult_total"]').change(function() {
+        if ( (parseInt($('input[name="child_total"]').val()) + parseInt($(this).val())) > parseInt($('select[name="max_people"]').val()) ) {
+            $('input[name="child_total"]').val( parseInt($('select[name="max_people"]').val()) - parseInt($(this).val()) );
+        }
+        $('input[name="child_total"]').attr('max',  parseInt($('select[name="max_people"]').val()) - parseInt($(this).val()) )
+    })
 });

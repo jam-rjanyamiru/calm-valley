@@ -42,3 +42,7 @@
 #wpmc-back-to-cart {
     display: none;
 }
+
+#billing_country_field {
+    display: none;
+}

@@ -1,7 +1,7 @@
-<?php
-// Session 同意
-echo 'STEP THREE';
-?>
+<!-- jquery-confirm -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
 <script src="/wp-content/themes/oceanwp-child/assets/js/booking_step_three.js"></script>
 
 <div>
