@@ -52,11 +52,6 @@ defined( 'ABSPATH' ) || exit;
     </tbody>
     <tfoot>
 
-    <tr class="cart-subtotal">
-        <th><?php esc_html_e( 'Subtotal', 'woocommerce' ); ?></th>
-        <td><?php wc_cart_totals_subtotal_html(); ?></td>
-    </tr>
-
     <?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
         <tr class="cart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
             <th><?php wc_cart_totals_coupon_label( $coupon ); ?></th>

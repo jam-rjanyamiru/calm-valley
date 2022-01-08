@@ -817,12 +817,16 @@ Class CalmValley
         $weekday_price = 1;
         $holiday_price = 1;
 
+        $booking_start_date = $_SESSION['booking_start_date'];
         $timestamp_booking_start_date = strtotime($_SESSION['booking_start_date']);
+        $booking_end_date = $_SESSION['booking_end_date'];
         $timestamp_booking_end_date = strtotime($_SESSION['booking_end_date']);
         $count_booking_days = ($timestamp_booking_end_date - $timestamp_booking_start_date)/(60*60*24);
 
+        $booking_date_holiday_period = array();
         if( get_option('custom_setting_holiday_date') != '' ){
             $explode_date = explode(',', get_option('custom_setting_holiday_date'));
+
             //                    Custom Holidays
             $tmp_timestamp_booking_end_date = strtotime("-1 day", $timestamp_booking_end_date);
 
@@ -833,8 +837,8 @@ Class CalmValley
                         $timestamp_holiday_date > $timestamp_booking_start_date
                         && $timestamp_holiday_date <= $tmp_timestamp_booking_end_date)
                 ){
+                    array_push($booking_date_holiday_period, date('Y-m-d', $timestamp_holiday_date));
                     $count_holidays += 1;
-                    continue;
                 }
             }
         }
@@ -845,15 +849,15 @@ Class CalmValley
         while ($timestamp < $timestamp_booking_end_date) {
             if ( (in_array(date("l", $timestamp), $skipdays)) )
             {
+                array_push($booking_date_holiday_period, date('Y-m-d', $timestamp));
                 $count_holidays += 1;
             }
             $timestamp = strtotime("+1 day", $timestamp);
         }
         $count_weekdays = $count_booking_days - $count_holidays;
 
-
         foreach(json_decode($cart_data) as $key => $single_data){
-//            目前這個迴圈都只會跑一次，因為一台購物車只會接收一次顧客要求的商品，但實際上有可能有兩個商品，因為規格問題
+//            目前這個迴圈都只會跑一次，因為一台購物車只會接收一次顧客要求的商品，但實際上有可能購物車會顯示兩個商品，因為預約時間不同(假日和平日的差別)，導致要選不同的商品
             $product_id = $single_data->pd_id;
             $quantity = 1;
             $max_people = $single_data->max_people;
@@ -890,32 +894,69 @@ Class CalmValley
             }
 
             if( ! WC()->cart->find_product_in_cart( $product_cart_id ) ){
-                if ($count_weekdays > 0) {
-                    $total_weekday_price = ($weekday_price * $count_weekdays);
-                    $weekday_booking_pd_meta_data = array(
-                        '_booking_price' => $total_weekday_price,
-                        '_booking_start_date' => $_SESSION['booking_start_date'],
-                        '_booking_end_date' => $_SESSION['booking_end_date'],
-                        '_booking_duration' => $_SESSION['booking_days'],
-                        '_ebs_start' => $_SESSION['booking_start_date'],
-                        '_ebs_end' => $_SESSION['booking_end_date'],
-                    );
-                    $weekday_variation_data = array('attribute_pa_max_people' => $max_people);
-                    WC()->cart->add_to_cart( $product_id, $quantity, $weekday_variation_id ,$weekday_variation_data, $weekday_booking_pd_meta_data);
+                $tmp_count_days = 0;
+                $the_last_day_is = '';
+                $tmp_start_date = $booking_start_date;
+                while (strtotime($booking_start_date) < strtotime($booking_end_date)) {
+                    if (in_array($booking_start_date, $booking_date_holiday_period)) {
+                        if ($the_last_day_is == 'weekday' && $count_weekdays) {
+                            $weekday_booking_pd_meta_data = array(
+                                   '_booking_price' => $weekday_price,
+                               '_booking_start_date' => $tmp_start_date,
+                               '_booking_end_date' => $booking_start_date,
+                               '_booking_duration' => $tmp_count_days,
+                               '_ebs_start' => $tmp_start_date,
+                               '_ebs_end' => $booking_start_date,
+                            );
+                            $weekday_variation_data = array('attribute_pa_max_people' => $max_people);
+                            WC()->cart->add_to_cart( $product_id, $tmp_count_days, $weekday_variation_id ,$weekday_variation_data, $weekday_booking_pd_meta_data);
+                            $tmp_count_days = 0;
+                            $tmp_start_date = $booking_start_date;
+                        }
+
+                        $the_last_day_is = 'holiday';
+                    } else {
+                        if ($the_last_day_is == 'holiday' && $count_holidays) {
+                            $holiday_booking_pd_meta_data = array(
+                                '_booking_price' => $holiday_price,
+                                '_booking_start_date' => $tmp_start_date,
+                                '_booking_end_date' => $booking_start_date,
+                                '_booking_duration' => $tmp_count_days,
+                                '_ebs_start' => $tmp_start_date,
+                                '_ebs_end' => $booking_start_date,
+                            );
+                            $holiday_variation_data = array('attribute_pa_max_people' => $max_people);
+                            WC()->cart->add_to_cart( $product_id, $tmp_count_days, $holiday_variation_id ,$holiday_variation_data, $holiday_booking_pd_meta_data);
+                            $tmp_count_days = 0;
+                            $tmp_start_date = $booking_start_date;
+                        }
+
+                        $the_last_day_is = 'weekday';
+                    }
+
+                    $tmp_count_days ++;
+                    $booking_start_date = date('Y-m-d', strtotime($booking_start_date. '+1 day'));
                 }
 
-                if ($count_holidays > 0) {
-                    $total_holiday_price = ($holiday_price * $count_holidays);
-                    $holiday_booking_pd_meta_data = array(
-                        '_booking_price' => $total_holiday_price,
-                        '_booking_start_date' => $_SESSION['booking_start_date'],
-                        '_booking_end_date' => $_SESSION['booking_end_date'],
-                        '_booking_duration' => $_SESSION['booking_days'],
-                        '_ebs_start' => $_SESSION['booking_start_date'],
-                        '_ebs_end' => $_SESSION['booking_end_date'],
+                if ($tmp_count_days) {
+                    if ($the_last_day_is == 'holiday') {
+                        $the_last_price = $holiday_price;
+                        $the_last_variation_id = $holiday_variation_id;
+                    } else {
+                        $the_last_price = $weekday_price;
+                        $the_last_variation_id = $weekday_variation_id;
+                    }
+
+                    $the_last_booking_pd_meta_data = array(
+                          '_booking_price' => $the_last_price,
+                          '_booking_start_date' => $tmp_start_date,
+                          '_booking_end_date' => $booking_start_date,
+                          '_booking_duration' => $tmp_count_days,
+                          '_ebs_start' => $tmp_start_date,
+                          '_ebs_end' => $booking_start_date,
                     );
-                    $holiday_variation_data = array('attribute_pa_max_people' => $max_people);
-                    WC()->cart->add_to_cart( $product_id, $quantity, $holiday_variation_id ,$holiday_variation_data, $holiday_booking_pd_meta_data);
+                    $the_last_variation_data = array('attribute_pa_max_people' => $max_people);
+                    WC()->cart->add_to_cart( $product_id, $tmp_count_days, $the_last_variation_id ,$the_last_variation_data, $the_last_booking_pd_meta_data);
                 }
             }
         }

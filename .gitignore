@@ -29,6 +29,8 @@ sftp-config.json
 
 # IntelliJ project files
 .idea
+.idea/
+.idea/*
 *.iml
 
 *workspace.xml
