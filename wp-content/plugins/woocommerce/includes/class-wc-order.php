@@ -2066,7 +2066,7 @@ class WC_Order extends WC_Abstract_Order {
 		$tax_display = $tax_display ? $tax_display : get_option( 'woocommerce_tax_display_cart' );
 		$total_rows  = array();
 
-		$this->add_order_item_totals_subtotal_row( $total_rows, $tax_display );
+//		$this->add_order_item_totals_subtotal_row( $total_rows, $tax_display );
 		$this->add_order_item_totals_discount_row( $total_rows, $tax_display );
 		$this->add_order_item_totals_shipping_row( $total_rows, $tax_display );
 		$this->add_order_item_totals_fee_rows( $total_rows, $tax_display );
