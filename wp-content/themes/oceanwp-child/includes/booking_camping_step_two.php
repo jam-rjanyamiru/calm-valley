@@ -65,9 +65,9 @@ if(isset($_SESSION['booking_pds'])){
                                 </div>
 
                                 <div class="meal-time" style="display:none;">
-                                    <label for="meal-time-period-01-<?=$i?>"><?=get_option('dinner_time_period_01')?></label>
+                                    <label for="meal-time-period-01-<?=$i?>"><?=get_option('dinner_time_period_01') . '~' . date("H:i", strtotime('+30 minutes', strtotime(get_option('dinner_time_period_01'))))?></label>
                                     <input id="meal-time-period-01-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="time_period_01">
-                                    <label for="meal-time-period-02-<?=$i?>"><?=get_option('dinner_time_period_02')?></label>
+                                    <label for="meal-time-period-02-<?=$i?>"><?=get_option('dinner_time_period_02') . '~' . date("H:i", strtotime('+30 minutes', strtotime(get_option('dinner_time_period_02'))))?></label>
                                     <input id="meal-time-period-02-<?=$i?>" type="radio" name="meal_time_<?=$i?>" value="time_period_02">
                                 </div>
                             </div>

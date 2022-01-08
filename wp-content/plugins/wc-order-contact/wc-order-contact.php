@@ -240,8 +240,7 @@ if( ! class_exists('WC_Order_Contact') ) :
                 $redirect_url = admin_url('admin.php?page='.$this->setting_parameters['edit_slug'].'&order_id='.$order_id);
             }
             add_comment_meta( $comment_id, 'note_from', $_REQUEST['from']);
-
-           if(get_post_meta($order_id, 'order_contact_email_activated', 1) == 1)
+            if(get_post_meta($order_id, 'order_contact_email_activated', 1) == 1)
             {
                 do_action('just_send_email', $to, $subject, $content, $headers);
             }
