@@ -6,6 +6,8 @@ jQuery(function ($)
         if( confirm( "Are you sure want to continue?" ) )
         {
             $(this).parents('form').submit();
+        } else {
+            location.reload();
         }
     });
 
@@ -14,7 +16,7 @@ jQuery(function ($)
         $(this).next('.switch.btn').trigger('click');
     });
 
-    $(document).on('change', 'input[name="email_activated"]', function ()
+    $(document).on('change', 'form.form_modify_email_activated input[name="email_activated"]', function ()
     {
         $(this).parents('form').first().submit();
     });

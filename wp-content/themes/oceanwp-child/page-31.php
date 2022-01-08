@@ -45,7 +45,7 @@ get_header();
             <table>
                 <tbody class="mapTable">
                 <?php
-                for($i=0;$i<10;$i++){
+                for($i=0;$i<1;$i++){
                     echo '<tr>';
                     for($j=0;$j<10;$j++){
                         echo '<td class="camping-position" data-pd-id="" data-position="'.$i.','.$j.'">'.$i.','.$j.'</td>';

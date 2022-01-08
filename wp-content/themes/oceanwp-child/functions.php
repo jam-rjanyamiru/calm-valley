@@ -123,23 +123,23 @@ Class CalmValley
             $dinner_time_period_02 = $_POST['dinner_time_period_02'];
 
             if( isset($dinner_info) ) {
-                update_option('max_dinner_desk_amount', $dinner_info);
+                update_option('max_dinner_desk_amount', trim($dinner_info));
             }
 
             if( isset($dinner_item_01) ) {
-                update_option('dinner_item_01', $dinner_item_01);
+                update_option('dinner_item_01', trim($dinner_item_01));
             }
 
             if( isset($dinner_item_02) ) {
-                update_option('dinner_item_02', $dinner_item_02);
+                update_option('dinner_item_02', trim($dinner_item_02));
             }
 
             if( isset($dinner_time_period_01) ) {
-                update_option('dinner_time_period_01', $dinner_time_period_01);
+                update_option('dinner_time_period_01', trim($dinner_time_period_01));
             }
 
             if( isset($dinner_time_period_02) ) {
-                update_option('dinner_time_period_02', $dinner_time_period_02);
+                update_option('dinner_time_period_02', trim($dinner_time_period_02));
             }
         }
         ?>
@@ -155,16 +155,16 @@ Class CalmValley
                 <label for="max_dinner_desk_amount">晚餐-蒸煮海鮮的最大桌數</label>
                 <input type="number" min="1" id="max_dinner_desk_amount" name="max_dinner_desk_amount" value="<?=get_option('max_dinner_desk_amount')?>">
                 <hr>
-                <label for="dinner_item_01">晚餐項目一</label>
+                <label for="dinner_item_01">新晚餐項目一</label>
                 <input type="text" id="dinner_item_01" name="dinner_item_01" value="<?=get_option('dinner_item_01')?>">
                 <hr>
-                <label for="dinner_item_02">晚餐項目二</label>
+                <label for="dinner_item_02">新晚餐項目二</label>
                 <input type="text" id="dinner_item_02" name="dinner_item_02" value="<?=get_option('dinner_item_02')?>">
                 <hr>
-                <label for="dinner_time_period_01">晚餐時間項目一(結束時間為往後30分鐘)</label>
+                <label for="dinner_time_period_01">新晚餐項目一的開始時間(結束時間為往後30分鐘)</label>
                 <input type="datepicker" id="dinner_time_period_01" class="only-time" name="dinner_time_period_01" value="<?=get_option('dinner_time_period_01')?>">
                 <hr>
-                <label for="dinner_time_period_02">晚餐時間項目二(結束時間為往後30分鐘)</label>
+                <label for="dinner_time_period_02">新晚餐項目二的結束時間(結束時間為往後30分鐘)</label>
                 <input type="datepicker" id="dinner_time_period_02" class="only-time" name="dinner_time_period_02" value="<?=get_option('dinner_time_period_02')?>">
                 <hr>
                 <input type="submit">
@@ -204,6 +204,14 @@ Class CalmValley
         ?>
         <div>* 您好，訂單將會保留「3天」，時間內匯款完成後，加上管理員確認完畢，就會寄信跟您告知，非常感謝您的配合！（管理員每天至少會確認一次）
         <?php
+    }
+
+    private function common_unserialize($str) {
+        if (empty($str)) {
+            return '';
+        }
+
+       return (preg_replace_callback('#s:(\d+):"(.*?)";#s', function($match){return 's:'.strlen($match[2]).':"'.$match[2].'";';}, $str));
     }
 
     public function show_export_orders() {
@@ -303,16 +311,16 @@ Class CalmValley
                     if(!empty($order_info)){
                         echo '<div style="font-weight:bold;">訂單總資訊</div>';
                         ?>
-                        <div>預約起始日:<?=$order_info['booking_start_date']?></div>
-                        <div>預約結束日:<?=$order_info['booking_end_date']?></div>
-                        <div>用餐人數:<?=$order_info['max_people']?></div>
-                        <div>幾個大人:<?=$order_info['order_adult_total']?></div>
-                        <div>幾個小孩:<?=$order_info['order_child_total']?></div>
-                        <div>統一編號:<?=$order_info['user_invoice_number']?></div>
-                        <div>行動管家:<?=$order_info['user_action_butler']?></div>
-                        <div>是否在營區用中餐(費用另結):<?=$order_info['user_add_fourth_meal']?></div>
-                        <div>是否吃素:<?=$order_info['user_is_vegetarian']?></div>
-                        <div>是否開車:<?=$order_info['user_is_driving']?></div>
+                        <div>預約起始日: <?=$order_info['booking_start_date']?></div>
+                        <div>預約結束日: <?=$order_info['booking_end_date']?></div>
+                        <div>用餐人數: <?=$order_info['max_people']?></div>
+                        <div>幾個大人: <?=$order_info['order_adult_total']?></div>
+                        <div>幾個小孩: <?=$order_info['order_child_total']?></div>
+                        <div>統一編號: <?=$order_info['user_invoice_number']?></div>
+                        <div>行動管家: <?=$order_info['user_action_butler']?></div>
+                        <div>是否在營區用中餐(費用另結): <?=$order_info['user_add_fourth_meal']?></div>
+                        <div>是否吃素: <?=$order_info['user_is_vegetarian']?></div>
+                        <div>是否開車: <?=$order_info['user_is_driving']?></div>
                         <hr>
                         <?php
                     }
@@ -321,13 +329,13 @@ Class CalmValley
                     if(!empty($order_user_info)){
                         echo '<div style="font-weight:bold;">訂單使用者資訊</div>';
                         ?>
-                        <div>使用者名字:<?=$order_user_info['first_name']?></div>
-                        <div>使用者姓氏:<?=$order_user_info['last_name']?></div>
-                        <div>使用者性別:<?=$order_user_info['user_gender']?></div>
-                        <div>使用者手機:<?=$order_user_info['user_phone']?></div>
-                        <div>訂單備註:<?=$order_user_info['order_comments']?></div>
-                        <div>使用者生日:<?=$order_user_info['user_birth']?></div>
-                        <div>使用者地址:<?=$order_user_info['user_address_1']?></div>
+                        <div>使用者名字: <?=$order_user_info['first_name']?></div>
+                        <div>使用者姓氏: <?=$order_user_info['last_name']?></div>
+                        <div>使用者性別: <?=$order_user_info['user_gender']?></div>
+                        <div>使用者手機: <?=$order_user_info['user_phone']?></div>
+                        <div>訂單備註: <?=$order_user_info['order_comments']?></div>
+                        <div>使用者生日: <?=$order_user_info['user_birth']?></div>
+                        <div>使用者地址: <?=$order_user_info['user_address_1']?></div>
                         <hr>
                         <?php
                     }
@@ -336,29 +344,25 @@ Class CalmValley
                     if(!empty($order_buyer_info)){
                         echo '<div style="font-weight:bold;">訂單訂購者資訊</div>';
                         ?>
-                        <div>訂購者名字:<?=$order_buyer_info['first_name']?></div>
-                        <div>訂購者姓氏:<?=$order_buyer_info['last_name']?></div>
-                        <div>訂購者性別:<?=$order_buyer_info['billing_gender']?></div>
-                        <div>訂購者手機:<?=$order_buyer_info['billing_phone']?></div>
-                        <div>訂購者地址:<?=$order_buyer_info['billing_address_1']?></div>
-                        <div>訂購者生日:<?=$order_buyer_info['billing_birth']?></div>
+                        <div>訂購者名字: <?=$order_buyer_info['first_name']?></div>
+                        <div>訂購者姓氏: <?=$order_buyer_info['last_name']?></div>
+                        <div>訂購者性別: <?=$order_buyer_info['billing_gender']?></div>
+                        <div>訂購者手機: <?=$order_buyer_info['billing_phone']?></div>
+                        <div>訂購者地址: <?=$order_buyer_info['billing_address_1']?></div>
+                        <div>訂購者生日: <?=$order_buyer_info['billing_birth']?></div>
                         <hr>
                         <?php
                     }
 
 
                     if(!empty($order_meal_info)){
-                        $trans_meal = ['item_01' => get_option('dinner_item_01'), 'item_02' => get_option('dinner_item_02'), 'steam' => '蒸煮海鮮'];
-                        $trans_eat_beef = ['y' => '是', 'n' => '否'];
-                        $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01'), 'time_period_02' => get_option('dinner_time_period_02')];
-
                         echo '<div style="font-weight:bold;">訂單用餐資訊</div>';
                         foreach ($order_meal_info as $info):
                             ?>
-                            <div>用餐日期:<?=$info['dinner_date']?></div>
-                            <div>晚餐餐點:<?=$trans_meal[$info['dinner']]?></div>
-                            <div>是否吃牛:<?=$trans_eat_beef[$info['eat_beef']]?></div>
-                            <div>時段:<?=$trans_meal_time[$info['time_period']]?></div>
+                            <div>用餐日期: <?=$info['dinner_date']?></div>
+                            <div>晚餐餐點: <?=$info['dinner']?></div>
+                            <div>是否吃牛: <?=$info['eat_beef']?></div>
+                            <div>時段: <?=$info['time_period']?></div>
                             <hr>
                             <?php
                         endforeach;
@@ -368,8 +372,8 @@ Class CalmValley
                     if(!empty($order_item_info)){
                         echo '<div style="font-weight:bold;">訂單商品資訊</div>';
                         ?>
-                        <div>露營車ID:<?=$order_item_info['pd_id']?></div>
-                        <div>露營車名稱:<?=$order_item_info['pd_name']?></div>
+                        <div>露營車ID: <?=$order_item_info['pd_id']?></div>
+                        <div>露營車名稱: <?=$order_item_info['pd_name']?></div>
                         <hr>
                         <?php
                     }
@@ -413,29 +417,26 @@ Class CalmValley
 
             $query = $wpdb->prepare($query);
             $all_order_info = $wpdb->get_results($query);
-
             $order_meal_info = array();
-            $trans_meal = ['item_01' => get_option('dinner_item_01'), 'item_02' => get_option('dinner_item_02'), 'steam' => '蒸煮海鮮'];
-            $trans_eat_beef = ['y' => '是', 'n' => '否'];
-            $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01'), 'time_period_02' => get_option('dinner_time_period_01')];
 
             if(is_array($all_order_info)){
                 foreach ($all_order_info as $order_info) {
                     $order_booking_info = unserialize(get_post_meta($order_info->ID, '_order_booking_info', 1));
                     foreach($order_booking_info as $info){
                         $tmp_order_meal_info['dinner_date'] = $info['booking_date'];
-                        $tmp_order_meal_info['dinner'] = $trans_meal[$info['dinner']];
-                        $tmp_order_meal_info['eat_beef'] = $trans_eat_beef[$info['eat_beef']];
-                        $tmp_order_meal_info['time_period'] = $trans_meal_time[$info['time_period']];
+                        $tmp_order_meal_info['dinner'] = $info['dinner'];
+                        $tmp_order_meal_info['eat_beef'] = $info['eat_beef'];
+                        $tmp_order_meal_info['time_period'] = $info['time_period'];
 
                         if (!isset($order_meal_info[$tmp_order_meal_info['dinner_date'] ])) {
                           $order_meal_info[ $tmp_order_meal_info['dinner_date'] ] = array();
                         }
-                        array_push($order_meal_info[$tmp_order_meal_info['dinner_date']] , $tmp_order_meal_info);
+                        arㄋray_push($order_meal_info[$tmp_order_meal_info['dinner_date']] , $tmp_order_meal_info);
                     }
                 }
             }
         }
+
         ?>
         <link rel="stylesheet" href="<?=get_stylesheet_directory_uri()?>/assets/css/air-datepicker.min.css">
         <script src="<?=get_stylesheet_directory_uri()?>/assets/js/air-datepicker.min.js"></script>
@@ -467,10 +468,10 @@ Class CalmValley
                             }
                             foreach ($info as $meal_info) {
                                 ?>
-                                <div>用餐日期:<?=$meal_info['dinner_date']?></div>
-                                <div>晚餐餐點:<?=$meal_info['dinner']?></div>
-                                <div>是否吃牛:<?=$meal_info['eat_beef']?></div>
-                                <div>時段:<?=$meal_info['time_period']?></div>
+                                <div style="font-size:14px;font-weight:bold;">用餐日期: <?=$meal_info['dinner_date']?></div>
+                                <div>晚餐餐點: <?=$meal_info['dinner']?></div>
+                                <div>是否吃牛: <?=$meal_info['eat_beef']?></div>
+                                <div>時段: <?=$meal_info['time_period']?></div>
                                 <hr>
                                 <?php
                             }
@@ -583,8 +584,6 @@ Class CalmValley
         }
 
         if( ! get_post_meta( $order_id, '_thankyou_action_done', true ) ) {
-            error_log(print_r('debug_log', 1));
-            error_log(print_r($_SESSION, 1));
             $order = wc_get_order($order_id);
             $order->add_order_note($_SESSION['custom_order_note']);
             $order->update_meta_data('_thankyou_action_done', true);
@@ -592,8 +591,6 @@ Class CalmValley
             $order->update_meta_data('_order_child_total',  $_SESSION['order_child_total']);
             $order->update_meta_data('_order_adult_total',  $_SESSION['order_adult_total']);
             $order->update_meta_data('_accept_contract',  $_SESSION['accept_contract']);
-            $order->update_meta_data('_start_booking_date',  $_SESSION['']);
-            $order->update_meta_data('_end_booking_date',  $_SESSION['accept_contract']);
             $order->save();
         }
     }
@@ -966,7 +963,7 @@ Class CalmValley
                 $tmp_order_note = '';
                 $trans_meal = ['item_01' => get_option('dinner_item_01'), 'item_02' => get_option('dinner_item_02'),  'steam' => '蒸煮海鮮'];
                 $trans_eat_beef = ['y' => '是', 'n' => '否'];
-                $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01'), 'time_period_02' => get_option('dinner_time_period_02')];
+                $trans_meal_time = ['time_period_01' => get_option('dinner_time_period_01') . '~' . date("H:i", strtotime('+30 minutes', strtotime(get_option('dinner_time_period_01')))), 'time_period_02' => get_option('dinner_time_period_02') . '~' . date("H:i", strtotime('+30 minutes', strtotime(get_option('dinner_time_period_02'))))];
                 $tmp_date = $_SESSION['booking_start_date'];
                 $order_booking_info_arr = [];
                 for($i=0;$i<$_SESSION['booking_days'];$i++){
@@ -978,9 +975,9 @@ Class CalmValley
 
                     array_push($order_booking_info_arr, [
                             'booking_date' => $tmp_date,
-                            'dinner' => $_POST['meal_'.$i],
-                            'eat_beef' => $_POST['eat_beef_'.$i],
-                            'time_period' => $_POST['meal_time_'.$i]
+                            'dinner' => $trans_meal[$_POST['meal_'.$i]],
+                            'eat_beef' => $trans_eat_beef[$_POST['eat_beef_'.$i]],
+                            'time_period' => $trans_meal_time[$_POST['meal_time_'.$i]]
                             ]);
 
                     $tmp_date = date('Y/m/d', strtotime($tmp_date . "+1 days" ));

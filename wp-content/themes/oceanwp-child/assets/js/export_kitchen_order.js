@@ -11,7 +11,6 @@ jQuery(function ($){
 
     $('input[name="end_date"]').datepicker({
         minDate: minDate,
-        maxDate: maxDate,
         language: 'zh',
     });
 })
